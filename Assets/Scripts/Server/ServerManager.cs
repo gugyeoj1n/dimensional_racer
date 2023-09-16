@@ -33,11 +33,45 @@ public class ServerManager : MonoBehaviour
         PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnError);
     }
 
+    private void GetUserData(string playfabId)
+    {
+        PlayFabClientAPI.GetUserData(new GetUserDataRequest()
+        {
+            PlayFabId = playfabId,
+            Keys = null
+        }, result =>
+        {
+            Debug.Log(result.Data);
+            foreach (var kvp in result.Data)
+            {
+                Debug.Log("Key : " + kvp.Key + " / Value : " + kvp.Value);
+            }
+        }, (error) =>
+        {
+            OnError(error);
+        });
+    }
+
     private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log("LOGIN SUCCESS");
+        GetUserData(result.PlayFabId);
+        GetPlayerCurrency();
     }
+
+    private void GetPlayerCurrency()
+    {
+        var request = new GetUserInventoryRequest();
+        PlayFabClientAPI.GetUserInventory(request, OnGetPlayerCurrencySuccess, OnError);
+    }
+
+    private string currencyCode = "BT";
     
+    private void OnGetPlayerCurrencySuccess(GetUserInventoryResult result)
+    {
+        int virtualCurrencyBalance = result.VirtualCurrency[currencyCode];
+        Debug.Log("Player's " + currencyCode + " balance: " + virtualCurrencyBalance);
+    }
     
     /// <summary>
     /// 회원가입
@@ -49,7 +83,8 @@ public class ServerManager : MonoBehaviour
         {
             Email = email,
             Password = password,
-            Username = username
+            Username = username,
+            DisplayName = username
         };
         
         PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnError);
@@ -58,6 +93,24 @@ public class ServerManager : MonoBehaviour
     private void OnRegisterSuccess(RegisterPlayFabUserResult result)
     {
         Debug.Log("REGISTER SUCCESS");
+        InitiateUserData();
+    }
+
+    private void InitiateUserData()
+    {
+        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest()
+        {
+            Data = new Dictionary<string, string>()
+            {
+                {"rating", "0"}
+            }
+        }, result =>
+        {
+            Debug.Log("INITIATED USER DATA");
+        }, error =>
+        {
+            OnError(error);
+        });
     }
 
     private void OnError(PlayFabError error)
