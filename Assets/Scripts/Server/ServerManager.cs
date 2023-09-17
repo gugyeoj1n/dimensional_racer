@@ -13,9 +13,13 @@ public class ServerManager : MonoBehaviour
     public string entityId;
     [HideInInspector]
     public string entityType;
+
+    private FriendManager friendManager;
     
     void Start()
     {
+        friendManager = FindObjectOfType<FriendManager>();
+        
         if(string.IsNullOrEmpty(PlayFabSettings.TitleId))
             PlayFabSettings.TitleId = "B4F2E";
         
@@ -62,6 +66,7 @@ public class ServerManager : MonoBehaviour
         Debug.Log("LOGIN SUCCESS");
         GetUserData(result.PlayFabId);
         GetPlayerCurrency();
+        friendManager.GetFriends();
         // 로그인 정보로 엔티티 키와 타입 저장
         entityId = result.EntityToken.Entity.Id;
         entityType = result.EntityToken.Entity.Type;
