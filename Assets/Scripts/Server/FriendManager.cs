@@ -1,15 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
-using TMPro;
 using Unity.VisualScripting;
 
 public class FriendManager : MonoBehaviour
 {
-    public TMP_Text friendName;
-    
     public void GetFriends()
     {
         PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest(),
@@ -19,7 +17,9 @@ public class FriendManager : MonoBehaviour
                 {
                     foreach (FriendInfo friend in result.Friends)
                     {
-                        Debug.Log(friend.Username);
+                        // *** FriendPlayFabId -> PlayFabId 로 변환하는 과정이 필요함 ***
+                        GetLastLoginOfFriend(friend.FriendPlayFabId);
+                        Debug.Log(friend.Username + " : " + friend.FriendPlayFabId);
                     }
                 }
                 else
@@ -27,11 +27,6 @@ public class FriendManager : MonoBehaviour
                     Debug.Log("NO FRIENDS");
                 }
             }, OnError);
-    }
-
-    public void Test()
-    {
-        GetLastLoginOfFriend(friendName.text);
     }
 
     public void GetLastLoginOfFriend(string targetId)
@@ -46,13 +41,24 @@ public class FriendManager : MonoBehaviour
 
     private void OnGetUserData(GetUserDataResult result)
     {
+        Debug.Log("ONGETUSERDATA 실행됨");
         foreach (var kvp in result.Data)
         {
+            Debug.Log(kvp.Key);
             if (kvp.Key == "lastLogin")
             {
-                Debug.Log("LAST LOGIN : " + kvp.Value.Value);
+                Debug.Log(GetTimeDiff(kvp.Value.Value) + "분 전 로그인했습니다.");
             }
         }
+    }
+
+    private int GetTimeDiff(string targetTime)
+    {
+        DateTime targetDateTime = DateTime.ParseExact(targetTime, "yyyy-MM-dd HH:mm:ss", null);
+        DateTime currentDateTime = DateTime.Now;
+
+        TimeSpan timeDifference = currentDateTime - targetDateTime;
+        return (int)timeDifference.TotalMinutes;
     }
 
     public void AddFriend(string targetUsername)

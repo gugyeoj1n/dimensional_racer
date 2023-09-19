@@ -28,6 +28,8 @@ public class AccountManager : MonoBehaviour
         
         //TryRegister("abc@gmail.com", "woojin9821", "test");
         TryLogin("abc@gmail.com", "woojin9821");
+        //TryLogin("kwooj2788@gmail.com", "woojin9821");
+
     }
 
     /// <summary>
@@ -85,7 +87,8 @@ public class AccountManager : MonoBehaviour
             Data = new Dictionary<string, string>()
             {
                 {"lastLogin", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}
-            }
+            },
+            Permission = UserDataPermission.Public
         }, result =>
         {
             Debug.Log("LOGIN TIME UPDATED!");
@@ -159,7 +162,8 @@ public class AccountManager : MonoBehaviour
             {
                 {"rating", "0"},
                 {"lastLogin", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}
-            }
+            },
+            Permission = UserDataPermission.Public
         }, result =>
         {
             Debug.Log("INITIATED USER DATA");
