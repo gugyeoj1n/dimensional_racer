@@ -18,13 +18,13 @@ public class QueueManager : MonoBehaviour
     public TMP_Dropdown queueTypeDropdown;
     //public TMP_Text timeText;
     
-    private ServerManager serverManager;
+    private AccountManager accountManager;
     public TicketInfo info;
     private string currentTicketId;
 
     void Start()
     {
-        serverManager = FindObjectOfType<ServerManager>();
+        accountManager = FindObjectOfType<AccountManager>();
         info = new TicketInfo();
     }
 
@@ -59,8 +59,8 @@ public class QueueManager : MonoBehaviour
             {
                 Entity = new PlayFab.MultiplayerModels.EntityKey
                 {
-                    Id = serverManager.entityId,
-                    Type = serverManager.entityType
+                    Id = accountManager.entityId,
+                    Type = accountManager.entityType
                 },
                 Attributes = new MatchmakingPlayerAttributes
                 {

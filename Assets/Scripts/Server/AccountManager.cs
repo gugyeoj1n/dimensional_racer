@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,12 +8,14 @@ using PlayFab.Json;
 using PlayFab.ProfilesModels;
 using EntityKey = PlayFab.ProfilesModels.EntityKey;
 
-public class ServerManager : MonoBehaviour
+public class AccountManager : MonoBehaviour
 {
     [HideInInspector]
     public string entityId;
     [HideInInspector]
     public string entityType;
+    [HideInInspector]
+    public string currentUserId;
 
     private FriendManager friendManager;
     
@@ -64,15 +67,32 @@ public class ServerManager : MonoBehaviour
     private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log("LOGIN SUCCESS");
+        currentUserId = result.PlayFabId;
+        UpdateLoginTime();
         GetUserData(result.PlayFabId);
         GetPlayerCurrency();
+        GetPlayerRating();
         friendManager.GetFriends();
         // 로그인 정보로 엔티티 키와 타입 저장
         entityId = result.EntityToken.Entity.Id;
         entityType = result.EntityToken.Entity.Type;
     }
 
-    private void GetPlayerCurrency()
+    private void UpdateLoginTime()
+    {
+        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>()
+            {
+                {"lastLogin", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}
+            }
+        }, result =>
+        {
+            Debug.Log("LOGIN TIME UPDATED!");
+        }, OnError);
+    }
+
+    public void GetPlayerCurrency()
     {
         var request = new GetUserInventoryRequest();
         PlayFabClientAPI.GetUserInventory(request, OnGetPlayerCurrencySuccess, OnError);
@@ -85,6 +105,28 @@ public class ServerManager : MonoBehaviour
         int virtualCurrencyBalance = result.VirtualCurrency[currencyCode];
         Debug.Log("Player's " + currencyCode + " balance: " + virtualCurrencyBalance);
     }
+
+    public void GetPlayerRating()
+    {
+        var request = new GetUserDataRequest();
+        PlayFabClientAPI.GetUserData(request, OnGetPlayerRatingSuccess, OnError);
+    }
+
+    private void OnGetPlayerRatingSuccess(GetUserDataResult result)
+    {
+        foreach (KeyValuePair<string, UserDataRecord> record in result.Data)
+        {
+            if (record.Key == "rating")
+            {
+                Debug.Log(record.Value.Value);
+                return;
+            }
+        }
+        
+        Debug.Log("FAILED TO GET USER RATING");
+    }
+    
+    
     
     /// <summary>
     /// 회원가입
@@ -115,7 +157,8 @@ public class ServerManager : MonoBehaviour
         {
             Data = new Dictionary<string, string>()
             {
-                {"rating", "0"}
+                {"rating", "0"},
+                {"lastLogin", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}
             }
         }, result =>
         {
