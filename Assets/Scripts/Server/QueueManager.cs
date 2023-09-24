@@ -124,6 +124,11 @@ public class QueueManager : MonoBehaviour
             this.OnMatchmakingError);
     }
 
+    public void CreateParty()
+    {
+        
+    }
+
     private void OnGetMatchmakingTicket(GetMatchmakingTicketResult result)
     {
         if (result.Status == "Matched")

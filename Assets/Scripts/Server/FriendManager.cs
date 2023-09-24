@@ -17,7 +17,6 @@ public class FriendManager : MonoBehaviour
                 {
                     foreach (FriendInfo friend in result.Friends)
                     {
-                        // *** FriendPlayFabId -> PlayFabId 로 변환하는 과정이 필요함 ***
                         GetLastLoginOfFriend(friend.FriendPlayFabId);
                         Debug.Log(friend.Username + " : " + friend.FriendPlayFabId);
                     }
@@ -47,7 +46,8 @@ public class FriendManager : MonoBehaviour
             Debug.Log(kvp.Key);
             if (kvp.Key == "lastLogin")
             {
-                Debug.Log(GetTimeDiff(kvp.Value.Value) + "분 전 로그인했습니다.");
+                (var time, string text) = CalculateTime(GetTimeDiff(kvp.Value.Value));
+                Debug.LogFormat("{0}{1} 전 로그인했습니다.", time, text);
             }
         }
     }
@@ -59,6 +59,16 @@ public class FriendManager : MonoBehaviour
 
         TimeSpan timeDifference = currentDateTime - targetDateTime;
         return (int)timeDifference.TotalMinutes;
+    }
+
+    private (int, string) CalculateTime(int target)
+    {
+        if (target >= 1440)
+            return (target / 1440, "일");
+        else if (target >= 60)
+            return (target / 60, "시간");
+        else
+            return (target, "분");
     }
 
     public void AddFriend(string targetUsername)
