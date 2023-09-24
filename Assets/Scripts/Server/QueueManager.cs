@@ -1,13 +1,23 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using PlayFab;
 using PlayFab.AuthenticationModels;
 using PlayFab.ClientModels;
+using PlayFab.CloudScriptModels;
+using PlayFab.EventsModels;
 using PlayFab.MultiplayerModels;
 using UnityEngine.UI;
 using TMPro;
+using EntityKey = PlayFab.MultiplayerModels.EntityKey;
+using Photon.Pun;
+using Photon;
+using Photon.Realtime;
+using UnityEngine.SceneManagement;
 
-public class QueueManager : MonoBehaviour
+
+public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     public class TicketInfo
     {
@@ -21,6 +31,7 @@ public class QueueManager : MonoBehaviour
     private AccountManager accountManager;
     public TicketInfo info;
     private string currentTicketId;
+    private GetMatchResult currentMatchResult;
 
     void Start()
     {
@@ -155,6 +166,49 @@ public class QueueManager : MonoBehaviour
     private void OnGetMatch(GetMatchResult result)
     {
         Debug.Log("매치메이킹에 성공했습니다.");
+        if (result.Members.Count == 2)
+        {
+            currentMatchResult = result;
+            CreatePhotonRoom();
+        }
+    }
+
+    public void CreatePhotonRoom()
+    {
+        PhotonNetwork.CreateRoom(
+            accountManager.entityId
+        );
+    }
+
+    public override void OnCreatedRoom()
+    {
+        object[] content = new object[] { accountManager.entityId };
+        RaiseEventOptions options = new RaiseEventOptions
+        {
+            TargetActors = GetPhotonPlayers(),
+            CachingOption = EventCaching.AddToRoomCache
+        };
+        PhotonNetwork.RaiseEvent(1, content, options, SendOptions.SendReliable);
+        SceneManager.LoadScene(1);
+    }
+
+    private int[] GetPhotonPlayers()
+    {
+        int[] result = new int[7];
+        int idx = 0;
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            foreach (MatchmakingPlayerWithTeamAssignment matchedPlayer in currentMatchResult.Members)
+            {
+                if (matchedPlayer.Entity.Id == player.NickName)
+                {
+                    result[idx] = player.ActorNumber;
+                    idx++;
+                }
+            }
+        }
+
+        return result;
     }
     
     public void CancelMatchMaking()
@@ -172,5 +226,23 @@ public class QueueManager : MonoBehaviour
     public void OnTicketCanceled(CancelMatchmakingTicketResult result)
     {
         Debug.Log("매치메이킹이 취소되었습니다.");
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == 1)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            if (data != null)
+            {
+                PhotonNetwork.JoinRoom((string)data[0]);
+            }
+        }
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("ROOM JOINED");
+        SceneManager.LoadScene(1);
     }
 }

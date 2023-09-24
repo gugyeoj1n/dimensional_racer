@@ -7,8 +7,11 @@ using PlayFab.ClientModels;
 using PlayFab.Json;
 using PlayFab.ProfilesModels;
 using EntityKey = PlayFab.ProfilesModels.EntityKey;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon;
 
-public class AccountManager : MonoBehaviour
+public class AccountManager : MonoBehaviourPunCallbacks
 {
     [HideInInspector]
     public string entityId;
@@ -18,7 +21,15 @@ public class AccountManager : MonoBehaviour
     public string currentUserId;
 
     private FriendManager friendManager;
-    
+    [SerializeField]
+    private string photonVer = "1.0.0";
+
+    void Awake()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.GameVersion = photonVer;
+    }
+
     void Start()
     {
         friendManager = FindObjectOfType<FriendManager>();
@@ -27,8 +38,8 @@ public class AccountManager : MonoBehaviour
             PlayFabSettings.TitleId = "B4F2E";
         
         //TryRegister("abc@gmail.com", "woojin9821", "test");
-        TryLogin("abc@gmail.com", "woojin9821");
-        //TryLogin("kwooj2788@gmail.com", "woojin9821");
+        //TryLogin("abc@gmail.com", "woojin9821");
+        TryLogin("kwooj2788@gmail.com", "woojin9821");
 
     }
 
@@ -78,8 +89,16 @@ public class AccountManager : MonoBehaviour
         // 로그인 정보로 엔티티 키와 타입 저장
         entityId = result.EntityToken.Entity.Id;
         entityType = result.EntityToken.Entity.Type;
+        // 포톤 서버에도 접속
+        PhotonNetwork.ConnectUsingSettings();
     }
 
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("CONNECTED TO PHOTON MASTER SERVER");
+        PhotonNetwork.NickName = entityId;
+    }
+    
     private void UpdateLoginTime()
     {
         PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest
