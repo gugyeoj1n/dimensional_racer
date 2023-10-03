@@ -1829,6 +1829,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: 
   entityType: 
+  currentUserId: 
+  photonVer: 1.0.0
 --- !u!1 &1980338930
 GameObject:
   m_ObjectHideFlags: 0

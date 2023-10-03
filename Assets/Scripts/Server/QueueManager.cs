@@ -37,11 +37,12 @@ public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         accountManager = FindObjectOfType<AccountManager>();
         info = new TicketInfo();
+        SetTicketInfo();
     }
 
     public void SetTicketInfo()
     {
-        info.queueCancelTime = 10;
+        info.queueCancelTime = 60;
         info.queueType = queueTypeDropdown.options[queueTypeDropdown.value].text;
     }
     
@@ -105,11 +106,10 @@ public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
     /// </summary>
     private IEnumerator WaitForMatch()
     {
-        float cancelTime = 20f;
         float waitTime = 0;
         float checkTime = 0;
         float checkInterval = 6f;
-        while (waitTime < cancelTime)
+        while (waitTime < info.queueCancelTime)
         {
             if (checkTime >= checkInterval)
             {
@@ -135,9 +135,22 @@ public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
             this.OnMatchmakingError);
     }
 
-    public void CreateParty()
+    public void RequestJoinTicket(string targetTicketId)
+    {
+        PlayFabMultiplayerAPI.JoinMatchmakingTicket(new JoinMatchmakingTicketRequest
+        {
+            TicketId = targetTicketId
+        }, OnJoinMatchMakingTicket, OnJoinError);
+    }
+
+    private void OnJoinMatchMakingTicket(JoinMatchmakingTicketResult result)
     {
         
+    }
+
+    private void OnJoinError(PlayFabError error)
+    {
+        Debug.Log(error);
     }
 
     private void OnGetMatchmakingTicket(GetMatchmakingTicketResult result)

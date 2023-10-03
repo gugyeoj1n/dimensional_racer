@@ -39,7 +39,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         
         //TryRegister("abc@gmail.com", "woojin9821", "test");
         //TryLogin("abc@gmail.com", "woojin9821");
-        TryLogin("kwooj2788@gmail.com", "woojin9821");
+        TryLogin("kwooj2788@gmail.com", "woojin9821!");
 
     }
 
@@ -55,7 +55,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
             Password = password
         };
         
-        PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnError);
+        PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnLoginError);
     }
 
     private void GetUserData(string playfabId)
@@ -73,7 +73,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
             }
         }, (error) =>
         {
-            OnError(error);
+            OnLoginError(error);
         });
     }
 
@@ -111,13 +111,13 @@ public class AccountManager : MonoBehaviourPunCallbacks
         }, result =>
         {
             Debug.Log("LOGIN TIME UPDATED!");
-        }, OnError);
+        }, OnLoginError);
     }
 
     public void GetPlayerCurrency()
     {
         var request = new GetUserInventoryRequest();
-        PlayFabClientAPI.GetUserInventory(request, OnGetPlayerCurrencySuccess, OnError);
+        PlayFabClientAPI.GetUserInventory(request, OnGetPlayerCurrencySuccess, OnLoginError);
     }
 
     private string currencyCode = "BT";
@@ -131,7 +131,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
     public void GetPlayerRating()
     {
         var request = new GetUserDataRequest();
-        PlayFabClientAPI.GetUserData(request, OnGetPlayerRatingSuccess, OnError);
+        PlayFabClientAPI.GetUserData(request, OnGetPlayerRatingSuccess, OnLoginError);
     }
 
     private void OnGetPlayerRatingSuccess(GetUserDataResult result)
@@ -147,8 +147,28 @@ public class AccountManager : MonoBehaviourPunCallbacks
         
         Debug.Log("FAILED TO GET USER RATING");
     }
-    
-    
+
+    public void OnLoginError(PlayFabError error)
+    {
+        switch (error.Error)
+        {
+            case PlayFabErrorCode.AccountNotFound:
+                Debug.Log("해당 유저를 찾을 수 없습니다.");
+                break;
+            case PlayFabErrorCode.InvalidEmailOrPassword:
+                Debug.Log("잘못된 계정 정보입니다.");
+                break;
+            case PlayFabErrorCode.InvalidEmailAddress:
+                Debug.Log("잘못된 이메일 형식입니다.");
+                break;
+            case PlayFabErrorCode.AccountAlreadyLinked:
+                Debug.Log("해당 계정으로 로그인 중인 기기가 있습니다.");
+                break;
+            default:
+                Debug.Log("통신 중 오류가 발생했습니다. 다시 시도해 주세요.");
+                break;
+        }
+    }
     
     /// <summary>
     /// 회원가입
@@ -194,6 +214,9 @@ public class AccountManager : MonoBehaviourPunCallbacks
 
     private void OnError(PlayFabError error)
     {
+        switch (error.Error)
+        {
+        }
         Debug.Log(error);
     }
 }
