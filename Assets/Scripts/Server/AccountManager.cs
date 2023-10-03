@@ -39,7 +39,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         
         //TryRegister("abc@gmail.com", "woojin9821", "test");
         //TryLogin("abc@gmail.com", "woojin9821");
-        TryLogin("kwooj2788@gmail.com", "woojin9821!");
+        TryLogin("kwooj2788@gmail.com", "woojin9821");
 
     }
 

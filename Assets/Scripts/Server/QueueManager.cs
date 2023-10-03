@@ -248,6 +248,7 @@ public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
             object[] data = (object[])photonEvent.CustomData;
             if (data != null)
             {
+                // 한 큐에 있는 플레이어들이 다른 룸으로 들어가지는 버그 수정 필요
                 PhotonNetwork.JoinRoom((string)data[0]);
             }
         }
@@ -256,6 +257,9 @@ public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnJoinedRoom()
     {
         Debug.Log("ROOM JOINED");
-        SceneManager.LoadScene(1);
+        Debug.Log("CURRENT ROOM INFO : " + PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.MasterClientId);
+        Debug.Log("ROOM COUNT AFTER JOINED : " + PhotonNetwork.CurrentRoom.PlayerCount);
+        //PhotonNetwork.LoadLevel("SyncTest");
+        //SceneManager.LoadScene(1);
     }
 }
