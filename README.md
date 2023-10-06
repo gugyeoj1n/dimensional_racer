@@ -1,5 +1,5 @@
 <div align="center">
-  <h3>HEADLIGHT</h3>
+  <h3>DIMENSIONAL RACER</h3>
   <h4>멀티플레이 레이싱 게임</h4>
   <h5>2023학년도 2학기 게임소프트웨어 팀3</h5>
   <br>
