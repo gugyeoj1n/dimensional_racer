@@ -38,8 +38,8 @@ public class AccountManager : MonoBehaviourPunCallbacks
             PlayFabSettings.TitleId = "B4F2E";
         
         //TryRegister("abc@gmail.com", "woojin9821", "test");
-        //TryLogin("abc@gmail.com", "woojin9821");
-        TryLogin("kwooj2788@gmail.com", "woojin9821");
+        TryLogin("abc@gmail.com", "woojin9821");
+        //TryLogin("kwooj2788@gmail.com", "woojin9821");
 
     }
 

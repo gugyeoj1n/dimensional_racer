@@ -17,7 +17,7 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 
 
-public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
+public class QueueManager : MonoBehaviourPunCallbacks
 {
     public class TicketInfo
     {
@@ -179,7 +179,7 @@ public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private void OnGetMatch(GetMatchResult result)
     {
         Debug.Log("매치메이킹에 성공했습니다.");
-        if (result.Members.Count == 2)
+        if (result.Members[1].Entity.Id == accountManager.entityId)
         {
             currentMatchResult = result;
             CreatePhotonRoom();
@@ -195,14 +195,7 @@ public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public override void OnCreatedRoom()
     {
-        object[] content = new object[] { accountManager.entityId };
-        RaiseEventOptions options = new RaiseEventOptions
-        {
-            TargetActors = GetPhotonPlayers(),
-            CachingOption = EventCaching.AddToRoomCache
-        };
-        PhotonNetwork.RaiseEvent(1, content, options, SendOptions.SendReliable);
-        SceneManager.LoadScene(1);
+        PhotonView.Get(this).RPC("MoveToPhotonRoom", RpcTarget.All, accountManager.entityId);
     }
 
     private int[] GetPhotonPlayers()
@@ -241,17 +234,10 @@ public class QueueManager : MonoBehaviourPunCallbacks, IOnEventCallback
         Debug.Log("매치메이킹이 취소되었습니다.");
     }
 
-    public void OnEvent(EventData photonEvent)
+    [PunRPC]
+    public void MoveToPhotonRoom(string targetId)
     {
-        if (photonEvent.Code == 1)
-        {
-            object[] data = (object[])photonEvent.CustomData;
-            if (data != null)
-            {
-                // 한 큐에 있는 플레이어들이 다른 룸으로 들어가지는 버그 수정 필요
-                PhotonNetwork.JoinRoom((string)data[0]);
-            }
-        }
+        PhotonNetwork.JoinRoom(targetId);
     }
 
     public override void OnJoinedRoom()
