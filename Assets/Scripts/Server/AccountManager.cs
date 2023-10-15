@@ -10,6 +10,7 @@ using EntityKey = PlayFab.ProfilesModels.EntityKey;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon;
+using UnityEngine.SceneManagement;
 
 public class AccountManager : MonoBehaviourPunCallbacks
 {
@@ -20,6 +21,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
     [HideInInspector]
     public string currentUserId;
 
+    private UiManager uiManager;
     private FriendManager friendManager;
     [SerializeField]
     private string photonVer = "1.0.0";
@@ -32,13 +34,14 @@ public class AccountManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        friendManager = FindObjectOfType<FriendManager>();
+        //friendManager = FindObjectOfType<FriendManager>();
+        uiManager = FindObjectOfType<UiManager>();
         
         if(string.IsNullOrEmpty(PlayFabSettings.TitleId))
             PlayFabSettings.TitleId = "B4F2E";
         
         //TryRegister("abc@gmail.com", "woojin9821", "test");
-        TryLogin("abc@gmail.com", "woojin9821");
+        //TryLogin("abc@gmail.com", "woojin9821");
         //TryLogin("kwooj2788@gmail.com", "woojin9821");
 
     }
@@ -56,6 +59,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         };
         
         PlayFabClientAPI.LoginWithEmailAddress(request, OnLoginSuccess, OnLoginError);
+        uiManager.SetProgressActive();
     }
 
     private void GetUserData(string playfabId)
@@ -85,7 +89,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         GetUserData(result.PlayFabId);
         GetPlayerCurrency();
         GetPlayerRating();
-        friendManager.GetFriends();
+        //friendManager.GetFriends();
         // 로그인 정보로 엔티티 키와 타입 저장
         entityId = result.EntityToken.Entity.Id;
         entityType = result.EntityToken.Entity.Type;
@@ -97,6 +101,8 @@ public class AccountManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("CONNECTED TO PHOTON MASTER SERVER");
         PhotonNetwork.NickName = entityId;
+        uiManager.SetProgressActive();
+        SceneManager.LoadScene(1);
     }
     
     private void UpdateLoginTime()
