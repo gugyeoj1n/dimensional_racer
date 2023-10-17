@@ -33,6 +33,10 @@ public class QueueManager : MonoBehaviourPunCallbacks
     private string currentTicketId;
     private GetMatchResult currentMatchResult;
 
+    private IEnumerator matchWaitingCoroutine;
+    private IEnumerator enterRoomCoroutine;
+    private bool isJoined = false;
+
     void Start()
     {
         accountManager = FindObjectOfType<AccountManager>();
@@ -93,7 +97,8 @@ public class QueueManager : MonoBehaviourPunCallbacks
     {
         currentTicketId = result.TicketId;
         Debug.Log("티켓이 생성되었습니다. 매치메이킹을 시작합니다.");
-        StartCoroutine(WaitForMatch());
+        matchWaitingCoroutine = WaitForMatch();
+        StartCoroutine(matchWaitingCoroutine);
     }
 
     private void OnMatchmakingError(PlayFabError error)
@@ -113,6 +118,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
         {
             if (checkTime >= checkInterval)
             {
+                Debug.Log("매치 상태 확인");
                 CheckTicketStatus();
                 checkTime = 0;
             }
@@ -157,6 +163,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
     {
         if (result.Status == "Matched")
         {
+            StopCoroutine(matchWaitingCoroutine);
             Debug.Log("게임을 찾았습니다.");
             PlayFabMultiplayerAPI.GetMatch(
                 new GetMatchRequest
@@ -168,6 +175,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
                 this.OnMatchmakingError);
         } else if (result.Status == "Canceled")
         {
+            StopCoroutine(matchWaitingCoroutine);
             Debug.Log("매치메이킹이 취소되었습니다.");
         }
         else
@@ -184,6 +192,11 @@ public class QueueManager : MonoBehaviourPunCallbacks
             currentMatchResult = result;
             CreatePhotonRoom();
         }
+        else
+        {
+            enterRoomCoroutine = RoomEnter(result.Members[1].Entity.Id);
+            StartCoroutine(enterRoomCoroutine);
+        }
     }
 
     public void CreatePhotonRoom()
@@ -193,9 +206,13 @@ public class QueueManager : MonoBehaviourPunCallbacks
         );
     }
 
-    public override void OnCreatedRoom()
+    IEnumerator RoomEnter(string targetId)
     {
-        PhotonView.Get(this).RPC("MoveToPhotonRoom", RpcTarget.All, accountManager.entityId);
+        while(!isJoined)
+        {
+            yield return new WaitForSeconds(3f);
+            PhotonNetwork.JoinRoom(targetId);
+        }
     }
 
     private int[] GetPhotonPlayers()
@@ -234,18 +251,20 @@ public class QueueManager : MonoBehaviourPunCallbacks
         Debug.Log("매치메이킹이 취소되었습니다.");
     }
 
-    [PunRPC]
-    public void MoveToPhotonRoom(string targetId)
-    {
-        PhotonNetwork.JoinRoom(targetId);
-    }
-
     public override void OnJoinedRoom()
     {
+        isJoined = true;
+        
+        //if(currentMatchResult.Members[1].Entity.Id != accountManager.entityId)
+        //    StopCoroutine(enterRoomCoroutine);
         Debug.Log("ROOM JOINED");
         Debug.Log("CURRENT ROOM INFO : " + PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.MasterClientId);
         Debug.Log("ROOM COUNT AFTER JOINED : " + PhotonNetwork.CurrentRoom.PlayerCount);
-        //PhotonNetwork.LoadLevel("SyncTest");
+        foreach(KeyValuePair<int, Player> a in PhotonNetwork.CurrentRoom.Players)
+        {
+            Debug.Log("Player " + a.Key + " : " + a.Value);
+        }
+        PhotonNetwork.LoadLevel("SyncTest");
         //SceneManager.LoadScene(1);
     }
 }

@@ -21,7 +21,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
     [HideInInspector]
     public string currentUserId;
 
-    private UiManager uiManager;
+    private UIManager uiManager;
     private FriendManager friendManager;
     [SerializeField]
     private string photonVer = "1.0.0";
@@ -35,15 +35,10 @@ public class AccountManager : MonoBehaviourPunCallbacks
     void Start()
     {
         //friendManager = FindObjectOfType<FriendManager>();
-        uiManager = FindObjectOfType<UiManager>();
+        uiManager = FindObjectOfType<UIManager>();
         
         if(string.IsNullOrEmpty(PlayFabSettings.TitleId))
             PlayFabSettings.TitleId = "B4F2E";
-        
-        //TryRegister("abc@gmail.com", "woojin9821", "test");
-        //TryLogin("abc@gmail.com", "woojin9821");
-        //TryLogin("kwooj2788@gmail.com", "woojin9821");
-
     }
 
     /// <summary>
@@ -102,7 +97,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         Debug.Log("CONNECTED TO PHOTON MASTER SERVER");
         PhotonNetwork.NickName = entityId;
         uiManager.SetProgressActive();
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
     
     private void UpdateLoginTime()
@@ -156,24 +151,8 @@ public class AccountManager : MonoBehaviourPunCallbacks
 
     public void OnLoginError(PlayFabError error)
     {
-        switch (error.Error)
-        {
-            case PlayFabErrorCode.AccountNotFound:
-                Debug.Log("해당 유저를 찾을 수 없습니다.");
-                break;
-            case PlayFabErrorCode.InvalidEmailOrPassword:
-                Debug.Log("잘못된 계정 정보입니다.");
-                break;
-            case PlayFabErrorCode.InvalidEmailAddress:
-                Debug.Log("잘못된 이메일 형식입니다.");
-                break;
-            case PlayFabErrorCode.AccountAlreadyLinked:
-                Debug.Log("해당 계정으로 로그인 중인 기기가 있습니다.");
-                break;
-            default:
-                Debug.Log("통신 중 오류가 발생했습니다. 다시 시도해 주세요.");
-                break;
-        }
+        uiManager.SetProgressActive();
+        uiManager.SetErrorBoard("잘못된 계정 정보입니다.");
     }
     
     /// <summary>
@@ -191,11 +170,13 @@ public class AccountManager : MonoBehaviourPunCallbacks
         };
         
         PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnError);
+        uiManager.SetProgressActive();
     }
 
     private void OnRegisterSuccess(RegisterPlayFabUserResult result)
     {
-        Debug.Log("REGISTER SUCCESS");
+        uiManager.SetProgressActive();
+        uiManager.SetRegisterSuccess();
         InitiateUserData();
     }
 
@@ -220,9 +201,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
 
     private void OnError(PlayFabError error)
     {
-        switch (error.Error)
-        {
-        }
-        Debug.Log(error);
+        uiManager.SetProgressActive();
+        uiManager.SetErrorBoard("오류가 발생했습니다. 다시 시도해 주세요.");
     }
 }
