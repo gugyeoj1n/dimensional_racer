@@ -4302,6 +4302,7 @@ MonoBehaviour:
   pwdInput: {fileID: 110404170}
   errorBoard: {fileID: 582970194}
   errorText: {fileID: 6453504}
+  loginSaver: {fileID: 666016664}
   registerPanel: {fileID: 54426420}
   nicknameInput: {fileID: 1107760133}
   registerEmailInput: {fileID: 313551683}

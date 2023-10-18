@@ -12,6 +12,8 @@ public class UIManager : MonoBehaviour
     public TMP_InputField pwdInput;
     public GameObject errorBoard;
     public TMP_Text errorText;
+    public Toggle loginSaver;
+    
     [Header("Register")]
     public GameObject registerPanel;
     public TMP_InputField nicknameInput;
@@ -29,12 +31,36 @@ public class UIManager : MonoBehaviour
     void Start()
     {
         accountManager = FindObjectOfType<AccountManager>();
+        LoadLoginInfo();
     }
 
     // 타이틀 화면
+
+    private void SaveLoginInfo()
+    {
+        PlayerPrefs.SetString("Email", emailInput.text);
+        PlayerPrefs.SetString("Pwd", pwdInput.text);
+    }
+
+    public void DeleteLoginInfo()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
+    private void LoadLoginInfo()
+    {
+        if (PlayerPrefs.HasKey("Email"))
+        {
+            emailInput.text = PlayerPrefs.GetString("Email").ToString();
+            pwdInput.text = PlayerPrefs.GetString("Pwd").ToString();
+            loginSaver.isOn = true;
+        }
+    }
     
     public void SendLoginInfo()
     {
+        if(loginSaver.isOn)
+            SaveLoginInfo();
         accountManager.TryLogin(emailInput.text, pwdInput.text);
     }
 
