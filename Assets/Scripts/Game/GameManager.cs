@@ -15,11 +15,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public bool isStarted = false;
     public float time = 300f;
-    
+
+    public GameObject playerPrefab;
     
     public void Start()
     {
         Debug.Log("현재 룸 인원수 : " + PhotonNetwork.CurrentRoom.PlayerCount);
+
+        PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up, Quaternion.identity, 0);
+        
         if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
         {
             photonView.RPC("StartGameCount", RpcTarget.All);

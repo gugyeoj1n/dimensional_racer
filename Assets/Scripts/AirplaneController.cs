@@ -40,9 +40,9 @@ public class AirplaneController : MonoBehaviour
 
     void FixedUpdate()
     {
-        pitchValue = Input.GetAxisRaw("Pitch");
+        pitchValue = Input.GetAxisRaw("Vertical");
         rollValue = Input.GetAxisRaw("Roll");
-        yawValue = Input.GetAxisRaw("Yaw");
+        yawValue = Input.GetAxisRaw("Horizontal");
 
         MoveAircraft();
     }
