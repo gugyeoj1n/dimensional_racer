@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -22,18 +23,37 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("현재 룸 인원수 : " + PhotonNetwork.CurrentRoom.PlayerCount);
 
-        PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up, Quaternion.identity, 0);
-        
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
-        {
-            photonView.RPC("StartGameCount", RpcTarget.All);
-        }
+        Vector3 startPos = Vector3.up + Vector3.right * PhotonNetwork.CurrentRoom.PlayerCount;
+
+        PhotonNetwork.Instantiate(playerPrefab.name, startPos, Quaternion.identity, 0);
     }
 
-    [PunRPC]
-    private void StartGameCount()
+    public void StartGame()
     {
-        StartCoroutine(StartGame());
+        isStarted = true;
+        StartCoroutine(CountStart());
+    }
+
+    IEnumerator CountStart()
+    {
+        Debug.Log("3");
+        yield return new WaitForSeconds(1f);
+        Debug.Log("2");
+        yield return new WaitForSeconds(1f);
+        Debug.Log("1");
+        yield return new WaitForSeconds(1f);
+        Debug.Log("GAME START");
+        UnlockInput();
+    }
+
+    private void UnlockInput()
+    {
+        PlayerManager[] players = FindObjectsOfType<PlayerManager>();
+        foreach (PlayerManager player in players)
+        {
+            if (player.GameObject().GetPhotonView().IsMine)
+                player.GameObject().GetComponent<AirplaneController>().enabled = true;
+        }
     }
 
     void Update()
@@ -52,19 +72,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
     
-    IEnumerator StartGame()
-    {
-        int cnt = 3;
-        for (int i = 0; i < 3; i++)
-        {
-            yield return new WaitForSeconds(1f);
-            Debug.Log(cnt);
-            cnt--;
-        }
-        yield return new WaitForSeconds(1f);
-        Debug.Log("GAME START");
-    }
-
     IEnumerator FinishCount()
     {
         int cnt = 10;

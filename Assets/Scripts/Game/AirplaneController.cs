@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 // using System.Numerics;
 using UnityEngine;
 
-public class AirplaneController : MonoBehaviour
+public class AirplaneController : MonoBehaviourPunCallbacks
 {
     [SerializeField]
     private float rollAmount;
@@ -44,6 +45,9 @@ public class AirplaneController : MonoBehaviour
         rollValue = Input.GetAxisRaw("Roll");
         yawValue = Input.GetAxisRaw("Horizontal");
 
+        if(!photonView.IsMine)
+            return;
+        
         MoveAircraft();
     }
 

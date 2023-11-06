@@ -151,6 +151,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
 
     public void OnLoginError(PlayFabError error)
     {
+        Debug.Log(error.ErrorMessage);
         uiManager.SetProgressActive();
         uiManager.SetErrorBoard("잘못된 계정 정보입니다.");
     }

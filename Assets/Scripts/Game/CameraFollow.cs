@@ -19,9 +19,14 @@ public class CameraFollow : MonoBehaviour
     private float height;
 
     [SerializeField]
-    private float smoothSpeed;
+    private float smoothSpeed = 0.125f;
 
-    private void LateUpdate()
+    /*void Start()
+    {
+        StartFollowing();
+    }*/
+
+    private void FixedUpdate()
     {
         if (camTransform == null && isFollowing)
         {
@@ -43,11 +48,17 @@ public class CameraFollow : MonoBehaviour
 
     private void Follow()
     {
-        cameraOffset.z = -distance;
-        cameraOffset.y = height;
-        camTransform.position = Vector3.Lerp(camTransform.position,
-            this.transform.position + this.transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
-        camTransform.LookAt(this.transform.position + centerOffset);
+        cameraOffset = new Vector3(transform.position.x, transform.position.y + height,
+            transform.position.z + distance);
+        camTransform.LookAt(transform.position + centerOffset);
+
+        camTransform.position = Vector3.Lerp(camTransform.position, cameraOffset, Time.deltaTime * smoothSpeed);
+        
+        //cameraOffset.z = -distance;
+        //cameraOffset.y = height;
+        //camTransform.position = Vector3.Lerp(camTransform.position,
+        //    this.transform.position + this.transform.TransformVector(cameraOffset), smoothSpeed * Time.deltaTime);
+        //camTransform.LookAt(this.transform.position + centerOffset);
     }
 
     private void Cut()

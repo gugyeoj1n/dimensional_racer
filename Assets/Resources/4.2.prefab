@@ -82,6 +82,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 198424372048343022}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -237973732757892376}
   m_SourcePrefab: {fileID: 100100000, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
 --- !u!1 &8602897753932606975 stripped
 GameObject:
@@ -95,15 +98,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8602897753932606975}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 570ce6974aedcb84399dc64c9e2735c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rollAmount: 100
+  rollAmount: 300
   pitchAmount: 100
   yawAmount: 100
-  speed: 1500
+  speed: 5000
   lerpAmount: 1
 --- !u!54 &7768450314186548109
 Rigidbody:
@@ -173,7 +176,6 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 3538539956741068545}
-  - {fileID: 0}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -205,6 +207,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486207dd2b80449f89ad412e7865040e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 0
-  height: 0
-  smoothSpeed: 0
+  distance: -10
+  height: 15
+  smoothSpeed: 3
+--- !u!114 &-237973732757892376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602897753932606975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad77651b940b4e6580935a872332d1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerId: 
