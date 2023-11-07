@@ -22,15 +22,32 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void Start()
     {
         Debug.Log("현재 룸 인원수 : " + PhotonNetwork.CurrentRoom.PlayerCount);
-
-        Vector3 startPos = Vector3.up + Vector3.right * PhotonNetwork.CurrentRoom.PlayerCount;
-
-        PhotonNetwork.Instantiate(playerPrefab.name, startPos, Quaternion.identity, 0);
+        StartCoroutine(CheckRoomFull());
+        //Vector3 startPos = Vector3.up + Vector3.right * PhotonNetwork.CurrentRoom.PlayerCount;
+        //PhotonNetwork.Instantiate(playerPrefab.name, startPos, Quaternion.identity, 0);
     }
 
+    private IEnumerator CheckRoomFull()
+    {
+        while(!isStarted)
+        {
+            Debug.Log("전원 입장 기다리는 중");
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
+            {
+                StartGame();
+            }
+
+            yield return new WaitForSecondsRealtime(0.01f);
+        }
+    }
+    
     public void StartGame()
     {
         isStarted = true;
+        GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up, Quaternion.identity, 0);
+        int targetPos = (player.GetComponent<PhotonView>().ViewID / 1000 - 1) * 30;
+        player.transform.position = Vector3.up + Vector3.right * targetPos;
+        player.GetComponent<PlayerManager>().StartCamera();
         StartCoroutine(CountStart());
     }
 
@@ -43,17 +60,23 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("1");
         yield return new WaitForSeconds(1f);
         Debug.Log("GAME START");
-        UnlockInput();
+        UnlockInput(true);
     }
 
-    private void UnlockInput()
+    private void UnlockInput(bool locked)
     {
         PlayerManager[] players = FindObjectsOfType<PlayerManager>();
         foreach (PlayerManager player in players)
         {
             if (player.GameObject().GetPhotonView().IsMine)
-                player.GameObject().GetComponent<AirplaneController>().enabled = true;
+                player.GameObject().GetComponent<AirplaneController>().enabled = locked;
         }
+    }
+
+    public void EndGame()
+    {
+        isStarted = false;
+        UnlockInput(false);
     }
 
     void Update()

@@ -41,12 +41,12 @@ public class AirplaneController : MonoBehaviourPunCallbacks
 
     void FixedUpdate()
     {
+        if(!photonView.IsMine)
+            return;
+        
         pitchValue = Input.GetAxisRaw("Vertical");
         rollValue = Input.GetAxisRaw("Roll");
         yawValue = Input.GetAxisRaw("Horizontal");
-
-        if(!photonView.IsMine)
-            return;
         
         MoveAircraft();
     }

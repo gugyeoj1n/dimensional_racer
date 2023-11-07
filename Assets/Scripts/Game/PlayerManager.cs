@@ -12,23 +12,16 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        
+    }
+
+    public void StartCamera()
+    {
         CameraFollow cam = GetComponent<CameraFollow>();
         if (photonView.IsMine)
         {
             cam.StartFollowing();
         }
-        
-        StartCoroutine(CheckRoomFull());
     }
 
-    private IEnumerator CheckRoomFull()
-    {
-        while(!gameManager.isStarted)
-        {
-            yield return new WaitForSeconds(0.1f);
-            if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
-                gameManager.StartGame();
-        }
-    }
+    
 }
