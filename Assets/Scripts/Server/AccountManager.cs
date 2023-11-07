@@ -14,12 +14,15 @@ using UnityEngine.SceneManagement;
 
 public class AccountManager : MonoBehaviourPunCallbacks
 {
+    [HideInInspector] public Dictionary<int, string> playerInfoInQueue;
+    
     [HideInInspector]
     public string entityId;
     [HideInInspector]
     public string entityType;
     [HideInInspector]
     public string currentUserId;
+    public string userName;
 
     private UIManager uiManager;
     private FriendManager friendManager;
@@ -81,6 +84,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         Debug.Log("LOGIN SUCCESS");
         currentUserId = result.PlayFabId;
         UpdateLoginTime();
+        GetUserName(result.PlayFabId);
         GetUserData(result.PlayFabId);
         GetPlayerCurrency();
         GetPlayerRating();
@@ -92,10 +96,25 @@ public class AccountManager : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
+    private void GetUserName(string targetId)
+    {
+        PlayFabClientAPI.GetPlayerProfile(new GetPlayerProfileRequest()
+        {
+            PlayFabId = targetId,
+            ProfileConstraints = new PlayerProfileViewConstraints()
+            {
+                ShowDisplayName = true
+            }
+        }, (result) =>
+        {
+            userName = result.PlayerProfile.DisplayName;
+        }, OnError);
+    }
+
     public override void OnConnectedToMaster()
     {
         Debug.Log("CONNECTED TO PHOTON MASTER SERVER");
-        PhotonNetwork.NickName = entityId;
+        PhotonNetwork.NickName = userName;
         uiManager.SetProgressActive();
         SceneManager.LoadScene(2);
     }
@@ -204,5 +223,16 @@ public class AccountManager : MonoBehaviourPunCallbacks
     {
         uiManager.SetProgressActive();
         uiManager.SetErrorBoard("오류가 발생했습니다. 다시 시도해 주세요.");
+    }
+
+    public string GetWinnerNickname(int viewId)
+    {
+        foreach (KeyValuePair<int, string> a in playerInfoInQueue)
+        {
+            if (a.Key == viewId % 1000)
+                return a.Value;
+        }
+
+        return null;
     }
 }

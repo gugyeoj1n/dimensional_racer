@@ -17,10 +17,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     public void StartCamera()
     {
         CameraFollow cam = GetComponent<CameraFollow>();
-        if (photonView.IsMine)
-        {
-            cam.StartFollowing();
-        }
+        cam.StartFollowing();
     }
 
     

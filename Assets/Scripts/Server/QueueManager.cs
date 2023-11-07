@@ -95,6 +95,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
 
     private void OnMatchmakingTicketCreated(CreateMatchmakingTicketResult result)
     {
+        PhotonNetwork.NickName = accountManager.userName;
         currentTicketId = result.TicketId;
         Debug.Log("티켓이 생성되었습니다. 매치메이킹을 시작합니다.");
         matchWaitingCoroutine = WaitForMatch();
@@ -187,6 +188,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
     private void OnGetMatch(GetMatchResult result)
     {
         Debug.Log("매치메이킹에 성공했습니다.");
+        
         if (result.Members[1].Entity.Id == accountManager.entityId)
         {
             currentMatchResult = result;
@@ -254,16 +256,17 @@ public class QueueManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         isJoined = true;
+        accountManager.playerInfoInQueue = new Dictionary<int, string>();
         
-        //if(currentMatchResult.Members[1].Entity.Id != accountManager.entityId)
-        //    StopCoroutine(enterRoomCoroutine);
-        Debug.Log("ROOM JOINED");
-        Debug.Log("CURRENT ROOM INFO : " + PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.MasterClientId);
-        Debug.Log("ROOM COUNT AFTER JOINED : " + PhotonNetwork.CurrentRoom.PlayerCount);
+        Debug.Log("입장 완료");
+
+        int i = 1;
         foreach(KeyValuePair<int, Player> a in PhotonNetwork.CurrentRoom.Players)
         {
-            Debug.Log("Player " + a.Key + " : " + a.Value);
+            accountManager.playerInfoInQueue.Add(i, a.Value.NickName);
+            i++;
         }
+        
         PhotonNetwork.LoadLevel("SyncTest");
         //SceneManager.LoadScene(1);
     }

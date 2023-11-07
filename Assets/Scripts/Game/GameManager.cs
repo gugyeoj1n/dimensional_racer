@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
     // 게임 씬에서 필요한 기능
     // 위치 재설정, 포톤 동기화, 플레이팹 카탈로그에서 자동차 아이템 가져오기, 게임 종료 후 점수 정산
-    
+
     // 방에 다 들어오면 (캐릭터들 다 생성되면) 3 2 1 하고 시작해
     // 1등이 들어오면 10초 세고 끝 못들어오면 리타이어
     // 정산하고 로비로 복귀
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public float time = 300f;
 
     public GameObject playerPrefab;
-    
+
     public void Start()
     {
         Debug.Log("현재 룸 인원수 : " + PhotonNetwork.CurrentRoom.PlayerCount);
@@ -29,11 +30,13 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private IEnumerator CheckRoomFull()
     {
-        while(!isStarted)
+        while (!isStarted)
         {
             Debug.Log("전원 입장 기다리는 중");
             if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
             {
+                if(PhotonNetwork.IsMasterClient)
+                    SpawnPlayers();
                 StartGame();
             }
 
@@ -41,13 +44,33 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
     
+    // 여기 수정하기. 지금 두 플레이어가 반대로 움직임
+
+    private void SpawnPlayers()
+    {
+        foreach (KeyValuePair<int, Player> pl in PhotonNetwork.CurrentRoom.Players)
+        {
+            GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up, Quaternion.identity, 0);
+            int targetPos = (player.GetComponent<PhotonView>().ViewID % 1000 - 1) * 30;
+            Debug.Log("Target Pos : " + targetPos);
+            player.transform.position = Vector3.up + Vector3.right * targetPos;
+            
+            player.GetComponent<PhotonView>().TransferOwnership(pl.Value);
+        }
+    }
+
     public void StartGame()
     {
         isStarted = true;
-        GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up, Quaternion.identity, 0);
-        int targetPos = (player.GetComponent<PhotonView>().ViewID / 1000 - 1) * 30;
-        player.transform.position = Vector3.up + Vector3.right * targetPos;
-        player.GetComponent<PlayerManager>().StartCamera();
+        PhotonView[] players = FindObjectsOfType<PhotonView>();
+        foreach (PhotonView player in players)
+        {
+            if (player.Controller == PhotonNetwork.LocalPlayer)
+            {
+                player.gameObject.GetComponent<PlayerManager>().StartCamera();
+            }
+        }
+        
         StartCoroutine(CountStart());
     }
 
@@ -68,13 +91,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         PlayerManager[] players = FindObjectsOfType<PlayerManager>();
         foreach (PlayerManager player in players)
         {
-            if (player.GameObject().GetPhotonView().IsMine)
+            if (player.GameObject().GetPhotonView().Controller == PhotonNetwork.LocalPlayer)
                 player.GameObject().GetComponent<AirplaneController>().enabled = locked;
         }
     }
 
-    public void EndGame()
+    public void EndGame(string winnerId)
     {
+        Debug.LogFormat("{0} 님의 승리!", winnerId);
         isStarted = false;
         UnlockInput(false);
     }

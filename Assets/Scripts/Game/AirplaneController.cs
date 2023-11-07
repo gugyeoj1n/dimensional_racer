@@ -41,7 +41,7 @@ public class AirplaneController : MonoBehaviourPunCallbacks
 
     void FixedUpdate()
     {
-        if(!photonView.IsMine)
+        if(photonView.Controller != PhotonNetwork.LocalPlayer)
             return;
         
         pitchValue = Input.GetAxisRaw("Vertical");
