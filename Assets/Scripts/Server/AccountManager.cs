@@ -23,11 +23,20 @@ public class AccountManager : MonoBehaviourPunCallbacks
     [HideInInspector]
     public string currentUserId;
     public string userName;
+    public int coin;
+    public int diamond;
 
     private UIManager uiManager;
     private FriendManager friendManager;
     [SerializeField]
     private string photonVer = "1.0.0";
+
+    private bool loginTimeResponse = false;
+    private bool userNameResponse = false;
+    private bool userDataResponse = false;
+    private bool currencyResponse = false;
+    private bool ratingResponse = false;
+    private bool photonResponse = false;
 
     void Awake()
     {
@@ -73,6 +82,8 @@ public class AccountManager : MonoBehaviourPunCallbacks
             {
                 Debug.Log("Key : " + kvp.Key + " / Value : " + kvp.Value.Value);
             }
+
+            userDataResponse = true;
         }, (error) =>
         {
             OnLoginError(error);
@@ -81,6 +92,8 @@ public class AccountManager : MonoBehaviourPunCallbacks
 
     private void OnLoginSuccess(LoginResult result)
     {
+        StartCoroutine(WaitForResponse());
+        
         Debug.Log("LOGIN SUCCESS");
         currentUserId = result.PlayFabId;
         UpdateLoginTime();
@@ -108,6 +121,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         }, (result) =>
         {
             userName = result.PlayerProfile.DisplayName;
+            userNameResponse = true;
         }, OnError);
     }
 
@@ -115,6 +129,16 @@ public class AccountManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("CONNECTED TO PHOTON MASTER SERVER");
         PhotonNetwork.NickName = userName;
+        photonResponse = true;
+    }
+
+    private IEnumerator WaitForResponse()
+    {
+        while (!(loginTimeResponse && userNameResponse && userDataResponse && currencyResponse && ratingResponse && photonResponse))
+        {
+            yield return null;
+        }
+        
         uiManager.SetProgressActive();
         SceneManager.LoadScene(2);
     }
@@ -131,6 +155,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         }, result =>
         {
             Debug.Log("LOGIN TIME UPDATED!");
+            loginTimeResponse = true;
         }, OnLoginError);
     }
 
@@ -140,13 +165,12 @@ public class AccountManager : MonoBehaviourPunCallbacks
         PlayFabClientAPI.GetUserInventory(request, OnGetPlayerCurrencySuccess, OnLoginError);
     }
 
-    private string currencyCode = "CN";
-    
     private void OnGetPlayerCurrencySuccess(GetUserInventoryResult result)
     {
         // 여기서 currencyCode가 CN이면 일반 코인, DM이면 캐시
-        int virtualCurrencyBalance = result.VirtualCurrency[currencyCode];
-        Debug.Log("Player's " + currencyCode + " balance: " + virtualCurrencyBalance);
+        coin = result.VirtualCurrency["CN"];
+        diamond = result.VirtualCurrency["DM"];
+        currencyResponse = true;
     }
 
     public void GetPlayerRating()
@@ -162,6 +186,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
             if (record.Key == "rating")
             {
                 Debug.Log(record.Value.Value);
+                ratingResponse = true;
                 return;
             }
         }
@@ -198,17 +223,18 @@ public class AccountManager : MonoBehaviourPunCallbacks
     {
         uiManager.SetProgressActive();
         uiManager.SetRegisterSuccess();
-        InitiateUserData();
+        InitiateUserData(result.Username);
     }
 
-    private void InitiateUserData()
+    private void InitiateUserData(string name)
     {
         PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest()
         {
             Data = new Dictionary<string, string>()
             {
                 {"rating", "0"},
-                {"lastLogin", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")}
+                {"lastLogin", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")},
+                {"username", name}
             },
             Permission = UserDataPermission.Public
         }, result =>

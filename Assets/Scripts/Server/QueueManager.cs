@@ -8,8 +8,6 @@ using PlayFab.ClientModels;
 using PlayFab.CloudScriptModels;
 using PlayFab.EventsModels;
 using PlayFab.MultiplayerModels;
-using UnityEngine.UI;
-using TMPro;
 using EntityKey = PlayFab.MultiplayerModels.EntityKey;
 using Photon.Pun;
 using Photon;
@@ -25,10 +23,9 @@ public class QueueManager : MonoBehaviourPunCallbacks
         public string queueType;
     }
 
-    public TMP_Dropdown queueTypeDropdown;
-    //public TMP_Text timeText;
-    
     private AccountManager accountManager;
+    private LobbyUIManager lobbyUIManager;
+    
     public TicketInfo info;
     private string currentTicketId;
     private GetMatchResult currentMatchResult;
@@ -40,14 +37,15 @@ public class QueueManager : MonoBehaviourPunCallbacks
     void Start()
     {
         accountManager = FindObjectOfType<AccountManager>();
-        info = new TicketInfo();
-        SetTicketInfo();
+        lobbyUIManager = FindObjectOfType<LobbyUIManager>();
+        SetTicketInfo("normal");
     }
 
-    public void SetTicketInfo()
+    public void SetTicketInfo(string type)
     {
+        info = new TicketInfo();
         info.queueCancelTime = 60;
-        info.queueType = queueTypeDropdown.options[queueTypeDropdown.value].text;
+        info.queueType = type;
     }
     
     /// <summary>
@@ -61,7 +59,6 @@ public class QueueManager : MonoBehaviourPunCallbacks
 
     public void CreateTicket()
     {
-        SetTicketInfo();
         if (info.queueType == null || info.queueCancelTime <= 0)
         {
             Debug.Log("잘못된 티켓 정보입니다.");
@@ -165,7 +162,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
         if (result.Status == "Matched")
         {
             StopCoroutine(matchWaitingCoroutine);
-            Debug.Log("게임을 찾았습니다.");
+            lobbyUIManager.SetMatchedPanel();
             PlayFabMultiplayerAPI.GetMatch(
                 new GetMatchRequest
                 {

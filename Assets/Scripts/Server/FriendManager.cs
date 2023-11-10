@@ -2,14 +2,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using PlayFab;
 using PlayFab.ClientModels;
+using PlayFab.MultiplayerModels;
 using Unity.VisualScripting;
 
 public class FriendManager : MonoBehaviour
 {
+    private LobbyUIManager lobbyUIManager;
+
+    public Dictionary<string, GameObject> friendPrefabList;
+
+    void Start()
+    {
+        lobbyUIManager = FindObjectOfType<LobbyUIManager>();
+        friendPrefabList = new Dictionary<string, GameObject>();
+    }
+    
     public void GetFriends()
     {
+        friendPrefabList.Clear();
+        lobbyUIManager.FriendPanelManage();
         PlayFabClientAPI.GetFriendsList(new GetFriendsListRequest(),
             result =>
             {
@@ -17,8 +31,8 @@ public class FriendManager : MonoBehaviour
                 {
                     foreach (FriendInfo friend in result.Friends)
                     {
+                        friendPrefabList.Add(friend.Username, lobbyUIManager.InstantiateFriend(friend.Username));
                         GetLastLoginOfFriend(friend.FriendPlayFabId);
-                        Debug.Log(friend.Username + " : " + friend.FriendPlayFabId);
                     }
                 }
                 else
@@ -41,15 +55,26 @@ public class FriendManager : MonoBehaviour
     private void OnGetUserData(GetUserDataResult result)
     {
         Debug.Log("ONGETUSERDATA 실행됨");
+        string name = "";
+        int time = 0;
+        string text = "";
         foreach (var kvp in result.Data)
         {
-            Debug.Log(kvp.Key);
+            if (kvp.Key == "username")
+                name = kvp.Value.Value;
+            
             if (kvp.Key == "lastLogin")
             {
-                (var time, string text) = CalculateTime(GetTimeDiff(kvp.Value.Value));
-                Debug.LogFormat("{0}{1} 전 로그인했습니다.", time, text);
+                (time, text) = CalculateTime(GetTimeDiff(kvp.Value.Value));
             }
         }
+        
+        SetLastLoginText(name, string.Format("마지막 로그인 : {0}{1} 전", time, text));
+    }
+
+    private void SetLastLoginText(string name, string text)
+    {
+        friendPrefabList[name].transform.GetChild(1).GetComponent<TMP_Text>().text = text;
     }
 
     private int GetTimeDiff(string targetTime)
