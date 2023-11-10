@@ -12,6 +12,7 @@ public class LobbyUIManager : MonoBehaviour
     public TMP_Text levelText;
 
     public GameObject ModeSetPanel;
+    public TMP_Text currentModeText;
 
     public bool isFriendOpened = false;
     public GameObject friendPanel;
@@ -48,12 +49,14 @@ public class LobbyUIManager : MonoBehaviour
     public void SetNormal()
     {
         queueManager.SetTicketInfo("normal");
+        currentModeText.text = "현재 모드 : 일반";
         ModeSetPanel.SetActive(false);
     }
 
     public void SetRank()
     {
         queueManager.SetTicketInfo("rank");
+        currentModeText.text = "현재 모드 : 랭크";
         ModeSetPanel.SetActive(false);
     }
 
