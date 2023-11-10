@@ -140,10 +140,11 @@ public class AccountManager : MonoBehaviourPunCallbacks
         PlayFabClientAPI.GetUserInventory(request, OnGetPlayerCurrencySuccess, OnLoginError);
     }
 
-    private string currencyCode = "BT";
+    private string currencyCode = "CN";
     
     private void OnGetPlayerCurrencySuccess(GetUserInventoryResult result)
     {
+        // 여기서 currencyCode가 CN이면 일반 코인, DM이면 캐시
         int virtualCurrencyBalance = result.VirtualCurrency[currencyCode];
         Debug.Log("Player's " + currencyCode + " balance: " + virtualCurrencyBalance);
     }

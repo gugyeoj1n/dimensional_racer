@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using UnityEngine;
 using Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using Unity.VisualScripting;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     // 게임 씬에서 필요한 기능
     // 위치 재설정, 포톤 동기화, 플레이팹 카탈로그에서 자동차 아이템 가져오기, 게임 종료 후 점수 정산
@@ -35,12 +36,13 @@ public class GameManager : MonoBehaviourPunCallbacks
             Debug.Log("전원 입장 기다리는 중");
             if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
             {
-                if(PhotonNetwork.IsMasterClient)
+                if (PhotonNetwork.IsMasterClient)
+                {
                     SpawnPlayers();
-                StartGame();
+                }
             }
 
-            yield return new WaitForSecondsRealtime(0.01f);
+            yield return new WaitForSecondsRealtime(0.1f);
         }
     }
     
@@ -57,6 +59,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             
             player.GetComponent<PhotonView>().TransferOwnership(pl.Value);
         }
+        
+        RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        SendOptions sendOptions = new SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(1, null, options, sendOptions);
     }
 
     public void StartGame()
@@ -65,6 +71,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonView[] players = FindObjectsOfType<PhotonView>();
         foreach (PhotonView player in players)
         {
+            Debug.LogFormat("카메라 확인 : {0}", player.ViewID);
             if (player.Controller == PhotonNetwork.LocalPlayer)
             {
                 player.gameObject.GetComponent<PlayerManager>().StartCamera();
@@ -92,13 +99,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         foreach (PlayerManager player in players)
         {
             if (player.GameObject().GetPhotonView().Controller == PhotonNetwork.LocalPlayer)
+            {
                 player.GameObject().GetComponent<AirplaneController>().enabled = locked;
+                if(!locked)
+                    Destroy(player.GameObject().GetComponent<Rigidbody>());
+            }
         }
     }
 
-    public void EndGame(string winnerId)
+    public void EndGame(int winnerId)
     {
-        Debug.LogFormat("{0} 님의 승리!", winnerId);
+        Debug.LogFormat("{0}번 플레이어의 승리!", winnerId);
         isStarted = false;
         UnlockInput(false);
     }
@@ -109,6 +120,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     public void CountTime()
+    
     {
         if(time >= 0f)
         {
@@ -130,5 +142,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         yield return new WaitForSeconds(1f);
         Debug.Log("FINISHED");
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        
+        // 게임 시작
+        if (eventCode == 1)
+        {
+            Debug.Log("EVENT CODE 1 RECEIVED");
+            StartGame();
+        }
     }
 }

@@ -259,13 +259,6 @@ public class QueueManager : MonoBehaviourPunCallbacks
         accountManager.playerInfoInQueue = new Dictionary<int, string>();
         
         Debug.Log("입장 완료");
-
-        int i = 1;
-        foreach(KeyValuePair<int, Player> a in PhotonNetwork.CurrentRoom.Players)
-        {
-            accountManager.playerInfoInQueue.Add(i, a.Value.NickName);
-            i++;
-        }
         
         PhotonNetwork.LoadLevel("SyncTest");
         //SceneManager.LoadScene(1);

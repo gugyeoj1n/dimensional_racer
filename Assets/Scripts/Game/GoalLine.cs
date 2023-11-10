@@ -20,8 +20,8 @@ public class GoalLine : MonoBehaviour
         {
             int winner = other.gameObject.GetComponent<PhotonView>().ViewID;
             Debug.LogFormat("WINNER VIEWID : {0}", winner);
-            string winnerNickname = accountManager.GetWinnerNickname(winner);
-            gameManager.EndGame(winnerNickname);
+            //string winnerNickname = accountManager.GetWinnerNickname(winner);
+            gameManager.EndGame(winner % 1000);
         }
     }
 }
