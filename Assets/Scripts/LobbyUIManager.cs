@@ -20,6 +20,12 @@ public class LobbyUIManager : MonoBehaviour
     public GameObject friendPrefab;
     public List<GameObject> friendList;
 
+    public List<GameObject> shopItemList;
+    public GameObject shopItemPrefab;
+    public GameObject shopContent;
+    public bool isShopOpened = false;
+    public GameObject shopPanel;
+
     public bool isMatching = false;
     public TMP_Text startButtonText;
     public GameObject matchedPanel;
@@ -27,11 +33,13 @@ public class LobbyUIManager : MonoBehaviour
     private QueueManager queueManager;
     private AccountManager accountManager;
     private FriendManager friendManager;
+    private ShopManager shopManager;
 
     void Start()
     {
         queueManager = FindObjectOfType<QueueManager>();
         accountManager = FindObjectOfType<AccountManager>();
+        shopManager = FindObjectOfType<ShopManager>();
         
         friendManager = FindObjectOfType<FriendManager>();
         friendList = new List<GameObject>();
@@ -110,10 +118,44 @@ public class LobbyUIManager : MonoBehaviour
     public void FriendPanelManage()
     {
         isFriendOpened = !isFriendOpened;
-        
         if(isFriendOpened) ClearFriendList();
-        
         friendPanel.SetActive(isFriendOpened);
+    }
+
+    public void ShopPanelManage()
+    {
+        isShopOpened = !isShopOpened;
+        if (isShopOpened)
+        {
+            ClearShop();
+            shopManager.RequestInventory();
+        }
+        shopPanel.SetActive(isShopOpened);
+    }
+
+    public void InstantiateShopItem(List<CartProduct> products)
+    {
+        foreach (CartProduct product in products)
+        {
+            GameObject shopItem = Instantiate(shopItemPrefab, shopContent.transform);
+            Transform init = shopItem.transform.GetChild(0);
+            init.GetChild(0).GetComponent<TMP_Text>().text = product.name;
+            init.GetChild(2).GetComponent<TMP_Text>().text = product.coinPrice.ToString();
+            init.GetChild(4).GetComponent<TMP_Text>().text = product.diamondPrice.ToString();
+            if(product.isPurchased)
+                shopItem.transform.GetChild(2).gameObject.SetActive(true);
+            else
+                shopItem.transform.GetChild(1).gameObject.SetActive(true);
+            
+            shopItemList.Add(shopItem);
+        }
+    }
+
+    private void ClearShop()
+    {
+        foreach(GameObject item in shopItemList)
+            Destroy(item);
+        shopItemList.Clear();
     }
 
     public void ExitGame()

@@ -17,6 +17,13 @@ public class CartProduct
 public class ShopManager : MonoBehaviour
 {
     private List<ItemInstance> userInven;
+
+    private LobbyUIManager lobbyUIManager;
+
+    void Start()
+    {
+        lobbyUIManager = FindObjectOfType<LobbyUIManager>();
+    }
     
     public void RequestInventory()
     {
@@ -55,17 +62,8 @@ public class ShopManager : MonoBehaviour
             
             products.Add(product);
         }
-        
-        PrintProducts(products);
-    }
 
-    public void PrintProducts(List<CartProduct> products)
-    {
-        // UI에 연결
-        foreach (CartProduct product in products)
-        {
-            Debug.LogFormat("아이템 {0} ({1}원) / 보유 여부 {2}", product.name, product.coinPrice, product.isPurchased);
-        }
+        lobbyUIManager.InstantiateShopItem(products);
     }
 
     private bool CheckIsPurchased(string itemName)
