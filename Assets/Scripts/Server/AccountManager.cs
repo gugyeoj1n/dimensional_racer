@@ -25,6 +25,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
     public string userName;
     public int coin;
     public int diamond;
+    public string playerIconId;
 
     private UIManager uiManager;
     private FriendManager friendManager;
@@ -77,10 +78,10 @@ public class AccountManager : MonoBehaviourPunCallbacks
             Keys = null
         }, result =>
         {
-            Debug.Log(result.Data);
             foreach (var kvp in result.Data)
             {
-                Debug.Log("Key : " + kvp.Key + " / Value : " + kvp.Value.Value);
+                if (kvp.Key == "playerIconId")
+                    playerIconId = kvp.Value.Value;
             }
 
             userDataResponse = true;
@@ -142,6 +143,22 @@ public class AccountManager : MonoBehaviourPunCallbacks
         uiManager.SetProgressActive();
         SceneManager.LoadScene(2);
     }
+
+    public void UpdatePlayerIcon(string iconId)
+    {
+        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>()
+            {
+                {"playerIconId", iconId}
+            },
+            Permission = UserDataPermission.Public
+        }, result =>
+        {
+            LobbyUIManager ui = FindObjectOfType<LobbyUIManager>();
+            ui.SetPlayerIcon(iconId);
+        }, OnError);
+    }
     
     private void UpdateLoginTime()
     {
@@ -171,6 +188,11 @@ public class AccountManager : MonoBehaviourPunCallbacks
         coin = result.VirtualCurrency["CN"];
         diamond = result.VirtualCurrency["DM"];
         currencyResponse = true;
+
+        if (SceneManager.GetActiveScene().name == "Lobby")
+        {
+            FindObjectOfType<LobbyUIManager>().RefreshLobbyMoney();
+        }
     }
 
     public void GetPlayerRating()
@@ -234,7 +256,8 @@ public class AccountManager : MonoBehaviourPunCallbacks
             {
                 {"rating", "0"},
                 {"lastLogin", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")},
-                {"username", name}
+                {"username", name},
+                {"playerIconId", "default"}
             },
             Permission = UserDataPermission.Public
         }, result =>
