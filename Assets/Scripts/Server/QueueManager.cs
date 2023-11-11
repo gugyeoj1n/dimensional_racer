@@ -13,6 +13,7 @@ using Photon.Pun;
 using Photon;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
 public class QueueManager : MonoBehaviourPunCallbacks
@@ -28,6 +29,10 @@ public class QueueManager : MonoBehaviourPunCallbacks
     
     public TicketInfo info;
     private string currentTicketId;
+
+    public string currentCartId;
+    public Hashtable customProperties;
+    
     private GetMatchResult currentMatchResult;
 
     private IEnumerator matchWaitingCoroutine;
@@ -39,6 +44,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
         accountManager = FindObjectOfType<AccountManager>();
         lobbyUIManager = FindObjectOfType<LobbyUIManager>();
         SetTicketInfo("normal");
+        SetCart("horn");
     }
 
     public void SetTicketInfo(string type)
@@ -203,6 +209,17 @@ public class QueueManager : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom(
             accountManager.entityId
         );
+    }
+
+    public void Test1()
+    {
+        SetCart("raptor");
+    }
+
+    public void SetCart(string cartId)
+    {
+        customProperties = new Hashtable{ { "cartId", cartId } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(customProperties);
     }
 
     IEnumerator RoomEnter(string targetId)

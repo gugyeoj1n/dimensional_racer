@@ -13,8 +13,9 @@ public class AirplaneController : MonoBehaviourPunCallbacks
     private float pitchAmount;
     [SerializeField]
     private float yawAmount;
-    [SerializeField]
-    private float speed;
+    public float speed;
+    public float minSpeed;
+    public float maxSpeed;
     [SerializeField]
     private float lerpAmount;
 
@@ -37,6 +38,7 @@ public class AirplaneController : MonoBehaviourPunCallbacks
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        minSpeed = speed;
     }
 
     void FixedUpdate()

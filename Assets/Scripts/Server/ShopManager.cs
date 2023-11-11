@@ -12,6 +12,7 @@ public class CartProduct
     public int coinPrice;
     public int diamondPrice;
     public GameObject model;
+    public Sprite capture;
     public bool isPurchased;
 }
 
@@ -52,6 +53,7 @@ public class ShopManager : MonoBehaviour
         {
             var customData = JsonUtility.FromJson<Dictionary<string, string>>(item.CustomData);
             
+            Debug.Log("아이템 로드 : " + item.ItemId + " / " + "CartCaptures/" + item.ItemId + "_capture");
             CartProduct product = new CartProduct()
             {
                 itemId = item.ItemId,
@@ -59,9 +61,10 @@ public class ShopManager : MonoBehaviour
                 coinPrice = Convert.ToInt32(item.VirtualCurrencyPrices["CN"]),
                 diamondPrice = Convert.ToInt32(item.VirtualCurrencyPrices["DM"]),
                 model = Resources.Load<GameObject>(""),
+                capture = Resources.Load<Sprite>("CartCaptures/" + item.ItemId + "_capture"),
                 isPurchased = CheckIsPurchased(item.DisplayName)
             };
-            
+            Debug.Log(product.capture);
             products.Add(product);
         }
 

@@ -168,6 +168,7 @@ public class LobbyUIManager : MonoBehaviour
         {
             GameObject shopItem = Instantiate(shopItemPrefab, shopContent.transform);
             Transform init = shopItem.transform.GetChild(0);
+            init.GetComponent<Image>().sprite = product.capture;
             init.GetChild(0).GetComponent<TMP_Text>().text = product.name;
             init.GetChild(2).GetComponent<TMP_Text>().text = product.coinPrice.ToString();
             init.GetChild(4).GetComponent<TMP_Text>().text = product.diamondPrice.ToString();

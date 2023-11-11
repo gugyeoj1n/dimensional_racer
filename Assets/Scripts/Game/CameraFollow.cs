@@ -21,10 +21,10 @@ public class CameraFollow : MonoBehaviour
     [SerializeField]
     private float smoothSpeed = 0.125f;
 
-    /*void Start()
-    {
-        StartFollowing();
-    }*/
+    //void Start()
+    //{
+    //    StartFollowing();
+    //}
 
     private void FixedUpdate()
     {

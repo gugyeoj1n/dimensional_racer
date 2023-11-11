@@ -52,7 +52,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
         foreach (KeyValuePair<int, Player> pl in PhotonNetwork.CurrentRoom.Players)
         {
-            GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.up, Quaternion.identity, 0);
+            Debug.Log("플레이어 확인 : " + pl.Value.NickName);
+            
+            string cartId = (string) pl.Value.CustomProperties["cartId"];
+            GameObject player = PhotonNetwork.Instantiate(cartId, Vector3.up, Quaternion.identity, 0);
             int targetPos = (player.GetComponent<PhotonView>().ViewID % 1000 - 1) * 30;
             Debug.Log("Target Pos : " + targetPos);
             player.transform.position = Vector3.up + Vector3.right * targetPos;

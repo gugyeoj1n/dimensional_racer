@@ -58,7 +58,7 @@ PrefabInstance:
       objectReference: {fileID: -5570197797731065986, guid: 5322c5652e91874478d1dfe14b15036f, type: 3}
     - target: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
       propertyPath: m_Name
-      value: 4.2
+      value: horn
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
       propertyPath: m_TagString
@@ -71,6 +71,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8371681159168886773}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -237973732757892376}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7768450314186548109}
@@ -86,9 +89,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 198424372048343022}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -237973732757892376}
   m_SourcePrefab: {fileID: 100100000, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
 --- !u!1 &8602897753932606975 stripped
 GameObject:
@@ -109,9 +109,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rollAmount: 300
   pitchAmount: 100
-  yawAmount: 100
-  speed: 5000
+  yawAmount: 200
+  speed: 8000
+  minSpeed: 8000
+  maxSpeed: 12000
   lerpAmount: 1
+--- !u!114 &-237973732757892376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602897753932606975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad77651b940b4e6580935a872332d1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerId: 
+  maxFuel: 1000
+  fuel: 1000
+  acceleration: 100
 --- !u!54 &7768450314186548109
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -214,16 +232,3 @@ MonoBehaviour:
   distance: -10
   height: 15
   smoothSpeed: 3
---- !u!114 &-237973732757892376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8602897753932606975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ad77651b940b4e6580935a872332d1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerId: 
