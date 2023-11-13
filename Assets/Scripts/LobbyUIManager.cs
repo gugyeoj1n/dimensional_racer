@@ -4,6 +4,9 @@ using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using PlayFab;
+using PlayFab.ClientModels;
+using PlayFab.Json;
 
 public class LobbyUIManager : MonoBehaviour
 {
@@ -21,6 +24,16 @@ public class LobbyUIManager : MonoBehaviour
     public GameObject friendContent;
     public GameObject friendPrefab;
     public List<GameObject> friendList;
+    public TMP_InputField friendSearchField;
+
+    public GameObject garagePanel;
+    public bool isGarageOpened = false;
+    public List<GameObject> garageItemList;
+    public GameObject garagePrefab;
+    public Transform garageContent;
+    public GameObject currentCartDisplay;
+    public string currentCartId;
+    public Transform displayPosition;
 
     public Dictionary<string, GameObject> shopItemList;
     public GameObject shopItemPrefab;
@@ -34,6 +47,11 @@ public class LobbyUIManager : MonoBehaviour
     public bool isMatching = false;
     public TMP_Text startButtonText;
     public GameObject matchedPanel;
+
+    public GameObject partyPanel;
+    public bool isPartyOpened;
+
+    public GameObject errorPanel;
 
     private QueueManager queueManager;
     private AccountManager accountManager;
@@ -49,8 +67,12 @@ public class LobbyUIManager : MonoBehaviour
         friendManager = FindObjectOfType<FriendManager>();
         friendList = new List<GameObject>();
         shopItemList = new Dictionary<string, GameObject>();
+        garageItemList = new List<GameObject>();
         
         InitiateUI();
+
+        GarageManage();
+        GarageManage();
     }
 
     public void InitiateUI()
@@ -79,13 +101,29 @@ public class LobbyUIManager : MonoBehaviour
         ModeSetPanel.SetActive(false);
     }
 
-    public GameObject InstantiateFriend(string userName)
+    public GameObject InstantiateFriend(FriendInfo friendInfo)
     {
         GameObject friend = Instantiate(friendPrefab, friendContent.transform);
-        friend.transform.GetChild(0).GetComponent<TMP_Text>().text = userName;
+        friend.transform.GetChild(0).GetComponent<TMP_Text>().text = friendInfo.Username;
+        friend.transform.GetChild(2).GetComponent<Button>().onClick.AddListener(() =>
+        {
+            friendManager.RemoveFriend(friendInfo);
+        });
         
         friendList.Add(friend);
         return friend;
+    }
+
+    public void SearchFriend()
+    {
+        if (friendSearchField.text == "") return;
+        friendManager.SearchFriend(friendSearchField.text);
+    }
+    
+    public void RefreshFriend()
+    {
+        FriendPanelManage();
+        friendManager.GetFriends();
     }
 
     private void ClearFriendList()
@@ -200,8 +238,105 @@ public class LobbyUIManager : MonoBehaviour
         shopItemList.Clear();
     }
 
+    public void GarageManage()
+    {
+        isGarageOpened = !isGarageOpened;
+        garagePanel.SetActive(isGarageOpened);
+        if (isGarageOpened)
+        {
+            accountManager.GetPlayerInventory();
+        }
+    }
+
+    public void ClearGarage()
+    {
+        foreach(GameObject item in garageItemList)
+            Destroy(item);
+
+        garageItemList.Clear();
+    }
+
+    public void SetGaragePanel(List<ItemInstance> items)
+    {
+        ClearGarage();
+
+        foreach (ItemInstance item in items)
+            InstantiateItem(item);
+    }
+
+    public void InstantiateItem(ItemInstance item)
+    {
+        Debug.Log("아이템 생성 : + " + item.DisplayName);
+        GameObject itemPrefab = Instantiate(garagePrefab, garageContent);
+        string resourcePath = "CartCaptures/" + item.ItemId + "_capture";
+        itemPrefab.transform.GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>(resourcePath);
+
+        GameObject target = Resources.Load<GameObject>(item.ItemId);
+
+        itemPrefab.GetComponent<OnMouseWindow>().window = itemPrefab.transform.parent.parent.parent.parent.GetChild(3).gameObject;
+        itemPrefab.GetComponent<OnMouseWindow>().name = item.DisplayName;
+        itemPrefab.GetComponent<OnMouseWindow>().speed = target.GetComponent<AirplaneController>().speed;
+        itemPrefab.GetComponent<OnMouseWindow>().accel = target.GetComponent<PlayerManager>().acceleration;
+        itemPrefab.GetComponent<OnMouseWindow>().fuel = target.GetComponent<PlayerManager>().fuel;
+        
+        itemPrefab.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
+        {
+            queueManager.SetCart(item.ItemId);
+            SetCurrentCart(itemPrefab);
+            SetCurrentDisplay(item.ItemId);
+            currentCartId = item.ItemId;
+        });
+        
+        garageItemList.Add(itemPrefab);
+    }
+
+    public void SetCurrentCart(GameObject target)
+    {
+        foreach (GameObject item in garageItemList)
+        {
+            if (item == target)
+                item.GetComponent<Image>().color = new Color(1f, 78 / 255f, 78 / 255f);
+            else
+                item.GetComponent<Image>().color = new Color(160/255f, 160 / 255f, 160 / 255f);
+        }
+    }
+
+    public void SetCurrentDisplay(string target)
+    {
+        Destroy(currentCartDisplay);
+        GameObject display = Resources.Load<GameObject>(target + "_display");
+        currentCartDisplay = Instantiate(display, displayPosition);
+    }
+
+    public void PartyManage()
+    {
+        isPartyOpened = !isPartyOpened;
+        partyPanel.SetActive(isPartyOpened);
+    }
+
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    public void ShowError(PlayFabError error)
+    {
+        errorPanel.SetActive(true);
+        string errorMessage = "";
+
+        switch (error.Error)
+        {
+            case PlayFabErrorCode.UserNotFriend:
+                errorMessage = "해당 유저를 찾을 수 없습니다.";
+                break;
+            case PlayFabErrorCode.UsersAlreadyFriends:
+                errorMessage = "이미 팔로우 중입니다.";
+                break;
+            default:
+                errorMessage = "오류가 발생했습니다. 다시 시도해 주세요.";
+                break;
+        }
+
+        errorPanel.transform.GetChild(0).GetComponent<TMP_Text>().text = errorMessage;
     }
 }

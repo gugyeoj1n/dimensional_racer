@@ -211,11 +211,6 @@ public class QueueManager : MonoBehaviourPunCallbacks
         );
     }
 
-    public void Test1()
-    {
-        SetCart("raptor");
-    }
-
     public void SetCart(string cartId)
     {
         customProperties = new Hashtable{ { "cartId", cartId } };

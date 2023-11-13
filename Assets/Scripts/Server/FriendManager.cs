@@ -31,7 +31,7 @@ public class FriendManager : MonoBehaviour
                 {
                     foreach (FriendInfo friend in result.Friends)
                     {
-                        friendPrefabList.Add(friend.Username, lobbyUIManager.InstantiateFriend(friend.Username));
+                        friendPrefabList.Add(friend.Username, lobbyUIManager.InstantiateFriend(friend));
                         GetLastLoginOfFriend(friend.FriendPlayFabId);
                     }
                 }
@@ -96,6 +96,18 @@ public class FriendManager : MonoBehaviour
             return (target, "분");
     }
 
+    public void SearchFriend(string target)
+    {
+        var request = new GetAccountInfoRequest()
+        {
+            Username = target
+        };
+        PlayFabClientAPI.GetAccountInfo(request, result =>
+        {
+            AddFriend(result.AccountInfo.Username);
+        }, OnError);
+    }
+
     public void AddFriend(string targetUsername)
     {
         var request = new AddFriendRequest
@@ -105,7 +117,7 @@ public class FriendManager : MonoBehaviour
         
         PlayFabClientAPI.AddFriend(request, result =>
             {
-                Debug.Log("NEW FRIEND");
+                lobbyUIManager.RefreshFriend();
             },
             OnError);
     }
@@ -117,12 +129,12 @@ public class FriendManager : MonoBehaviour
             FriendPlayFabId = target.FriendPlayFabId
         }, result =>
         {
-            Debug.Log("FRIEND REMOVED");
+            lobbyUIManager.RefreshFriend();
         }, OnError);
     }
 
     public void OnError(PlayFabError error)
     {
-        Debug.Log(error);
+        lobbyUIManager.ShowError(error);
     }
 }

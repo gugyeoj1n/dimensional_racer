@@ -10,6 +10,7 @@ using EntityKey = PlayFab.ProfilesModels.EntityKey;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon;
+using PlayFab.EconomyModels;
 using UnityEngine.SceneManagement;
 
 public class AccountManager : MonoBehaviourPunCallbacks
@@ -221,6 +222,18 @@ public class AccountManager : MonoBehaviourPunCallbacks
         Debug.Log(error.ErrorMessage);
         uiManager.SetProgressActive();
         uiManager.SetErrorBoard("잘못된 계정 정보입니다.");
+    }
+
+    public void GetPlayerInventory()
+    {
+        PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), result =>
+        {
+            LobbyUIManager ui = FindObjectOfType<LobbyUIManager>();
+            ui.SetGaragePanel(result.Inventory);
+        }, error =>
+        {
+            Debug.Log(error.ErrorMessage);
+        });
     }
     
     /// <summary>
