@@ -46,21 +46,19 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
     
-    // 여기 수정하기. 지금 두 플레이어가 반대로 움직임
-
     private void SpawnPlayers()
     {
+        int cnt = 0;
         foreach (KeyValuePair<int, Player> pl in PhotonNetwork.CurrentRoom.Players)
         {
             Debug.Log("플레이어 확인 : " + pl.Value.NickName);
             
             string cartId = (string) pl.Value.CustomProperties["cartId"];
-            GameObject player = PhotonNetwork.Instantiate(cartId, Vector3.up, Quaternion.identity, 0);
-            int targetPos = (player.GetComponent<PhotonView>().ViewID % 1000 - 1) * 30;
-            Debug.Log("Target Pos : " + targetPos);
-            player.transform.position = Vector3.up + Vector3.right * targetPos;
+            GameObject player = PhotonNetwork.Instantiate(cartId, Vector3.up * 5f + Vector3.right * (cnt * 30f), Quaternion.identity, 0);
+            //int targetPos = (player.GetComponent<PhotonView>().ViewID % 1000 - 1) * 50;
             
             player.GetComponent<PhotonView>().TransferOwnership(pl.Value);
+            cnt++;
         }
         
         RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
@@ -104,6 +102,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             if (player.GameObject().GetPhotonView().Controller == PhotonNetwork.LocalPlayer)
             {
                 player.GameObject().GetComponent<AirplaneController>().enabled = locked;
+                player.InitParticles();
                 if(!locked)
                     Destroy(player.GameObject().GetComponent<Rigidbody>());
             }

@@ -13,14 +13,23 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     public float maxFuel;
     public float fuel;
     public float acceleration;
+
+    public ParticleSystem[] particles;
     
     
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
         airplaneController = GetComponent<AirplaneController>();
+        particles = GetComponentsInChildren<ParticleSystem>();
 
         fuel = maxFuel;
+    }
+
+    public void InitParticles()
+    {
+        foreach(ParticleSystem particle in particles)
+            particle.Play();
     }
 
     void Update()
@@ -50,6 +59,16 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
         fuel -= acceleration * 0.5f * Time.deltaTime;
         airplaneController.speed += acceleration * 10f * Time.deltaTime;
+        SetParticles(true);
+    }
+
+    public void SetParticles(bool up)
+    {
+        foreach (ParticleSystem particle in particles)
+        {
+            ParticleSystem.MainModule main = particle.main;
+            main.startSpeed = new ParticleSystem.MinMaxCurve(up ? 40f : 20f);
+        }
     }
 
     private void Decelerate()
@@ -58,5 +77,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks
             return;
 
         airplaneController.speed -= 100f * Time.deltaTime;
+        SetParticles(false);
     }
 }
