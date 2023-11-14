@@ -102,10 +102,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             if (player.GameObject().GetPhotonView().Controller == PhotonNetwork.LocalPlayer)
             {
                 player.GameObject().GetComponent<AirplaneController>().enabled = locked;
-                player.InitParticles();
                 if(!locked)
                     Destroy(player.GameObject().GetComponent<Rigidbody>());
             }
+            player.InitParticles();
         }
     }
 
