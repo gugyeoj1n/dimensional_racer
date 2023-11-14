@@ -58,18 +58,26 @@ public class LobbyUIManager : MonoBehaviour
     public TMP_Text partyMemberText;
     public TMP_Text partyCreatorText;
 
+    public GameObject settingPanel;
+    public Slider masterVolume;
+    public Slider backgroundVolume;
+    public Slider effectVolume;
+    public TMP_Dropdown windowed;
+
     public GameObject errorPanel;
 
     private QueueManager queueManager;
     private AccountManager accountManager;
     private FriendManager friendManager;
     private ShopManager shopManager;
+    private SettingManager settingManager;
 
     void Start()
     {
         queueManager = FindObjectOfType<QueueManager>();
         accountManager = FindObjectOfType<AccountManager>();
         shopManager = FindObjectOfType<ShopManager>();
+        settingManager = FindObjectOfType<SettingManager>();
         
         friendManager = FindObjectOfType<FriendManager>();
         friendList = new List<GameObject>();
@@ -347,6 +355,13 @@ public class LobbyUIManager : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    public void ApplySettings()
+    {
+        bool window = windowed.options[windowed.value].text == "창 모드";
+        settingManager.SaveSettings(masterVolume.value, backgroundVolume.value, effectVolume.value, window);
+        settingPanel.SetActive(false);
     }
 
     public void ShowError(PlayFabError error)

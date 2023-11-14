@@ -1078,10 +1078,15 @@ MonoBehaviour:
   matchedPanel: {fileID: 1223329774}
   partyPanel: {fileID: 458527599}
   isPartyOpened: 0
-  partyContent: {fileID: 0}
-  partyPlayer: {fileID: 0}
-  partyMemberText: {fileID: 0}
-  partyCreatorText: {fileID: 0}
+  partyContent: {fileID: 1032064630}
+  partyPlayer: {fileID: 5536427473312758806, guid: 1e923c1eb3fe847e5b7cb6acc0c7511b, type: 3}
+  partyMemberText: {fileID: 397871571}
+  partyCreatorText: {fileID: 1825002549}
+  settingPanel: {fileID: 1002193696}
+  masterVolume: {fileID: 1138228320}
+  backgroundVolume: {fileID: 2073658737}
+  effectVolume: {fileID: 1465277637}
+  windowed: {fileID: 2049889079}
   errorPanel: {fileID: 1454172818}
 --- !u!1 &126122228
 GameObject:
@@ -9390,7 +9395,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -180}
+  m_AnchoredPosition: {x: 35, y: -180}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &822894419
@@ -12326,11 +12331,11 @@ RectTransform:
   - {fileID: 495853112}
   m_Father: {fileID: 1735702681}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 180, y: 5}
   m_SizeDelta: {x: 160, y: 20}
-  m_Pivot: {x: 0, y: 0.5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1138228320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15749,11 +15754,11 @@ RectTransform:
   - {fileID: 1160765423}
   m_Father: {fileID: 1998129217}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 180, y: 5}
   m_SizeDelta: {x: 160, y: 20}
-  m_Pivot: {x: 0, y: 0.5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1465277637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17980,7 +17985,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -100}
+  m_AnchoredPosition: {x: 35, y: -100}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1735702682
@@ -20892,7 +20897,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 123631136}
         m_TargetAssemblyTypeName: LobbyUIManager, Assembly-CSharp
-        m_MethodName: ExitGame
+        m_MethodName: ApplySettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -21022,7 +21027,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -260}
+  m_AnchoredPosition: {x: 35, y: -260}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1998129218
@@ -22299,7 +22304,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -340}
+  m_AnchoredPosition: {x: 40, y: -340}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2065038447
@@ -22776,11 +22781,11 @@ RectTransform:
   - {fileID: 1721551492}
   m_Father: {fileID: 822894418}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 180, y: 5}
   m_SizeDelta: {x: 160, y: 20}
-  m_Pivot: {x: 0, y: 0.5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &2073658737
 MonoBehaviour:
   m_ObjectHideFlags: 0
