@@ -16,6 +16,8 @@ public class LobbyUIManager : MonoBehaviour
     public TMP_Text levelText;
     public Image playerIcon;
 
+    public Image TierImage;
+
     public GameObject ModeSetPanel;
     public TMP_Text currentModeText;
 
@@ -50,6 +52,11 @@ public class LobbyUIManager : MonoBehaviour
 
     public GameObject partyPanel;
     public bool isPartyOpened;
+    public Transform partyContent;
+    public GameObject partyPlayer;
+    public Dictionary<string, GameObject> partyPlayers;
+    public TMP_Text partyMemberText;
+    public TMP_Text partyCreatorText;
 
     public GameObject errorPanel;
 
@@ -68,6 +75,7 @@ public class LobbyUIManager : MonoBehaviour
         friendList = new List<GameObject>();
         shopItemList = new Dictionary<string, GameObject>();
         garageItemList = new List<GameObject>();
+        partyPlayers = new Dictionary<string, GameObject>();
         
         InitiateUI();
 
@@ -80,11 +88,26 @@ public class LobbyUIManager : MonoBehaviour
         userNameText.text = accountManager.userName;
         RefreshLobbyMoney();
         SetPlayerIcon(accountManager.playerIconId);
+        SetTier(accountManager.rating);
     }
 
     public void SetPlayerIcon(string id)
     {
         playerIcon.sprite = Resources.Load<Sprite>("PlayerIcons/" + id);
+    }
+
+    public void SetTier(string rating)
+    {
+        Debug.Log("레이팅 : " + rating);
+        Color targetColor;
+        float tier = float.Parse(rating);
+        if (tier <= 500) targetColor = new Color(205/255f, 127/255f, 50/255f);
+        else if (tier > 500 && tier <= 1500) targetColor = new Color(192 / 255f, 192 / 255f, 192 / 255f);
+        else if (tier > 1500 && tier <= 2500) targetColor = new Color(1f, 215 / 255f, 0);
+        else if (tier > 2500 && tier <= 3500) targetColor = new Color(80 / 255f, 200 / 255f, 120 / 255f);
+        else targetColor = new Color(185 / 255f, 242 / 255f, 1f);
+
+        TierImage.color = targetColor;
     }
 
     public void SetNormal()
@@ -312,6 +335,13 @@ public class LobbyUIManager : MonoBehaviour
     {
         isPartyOpened = !isPartyOpened;
         partyPanel.SetActive(isPartyOpened);
+        if (isPartyOpened)
+            InitParty();
+    }
+
+    public void InitParty()
+    {
+        
     }
 
     public void ExitGame()

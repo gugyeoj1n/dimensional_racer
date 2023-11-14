@@ -27,6 +27,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
     public int coin;
     public int diamond;
     public string playerIconId;
+    public string rating;
 
     private UIManager uiManager;
     private FriendManager friendManager;
@@ -208,7 +209,7 @@ public class AccountManager : MonoBehaviourPunCallbacks
         {
             if (record.Key == "rating")
             {
-                Debug.Log(record.Value.Value);
+                rating = record.Value.Value;
                 ratingResponse = true;
                 return;
             }
@@ -270,7 +271,8 @@ public class AccountManager : MonoBehaviourPunCallbacks
                 {"rating", "0"},
                 {"lastLogin", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")},
                 {"username", name},
-                {"playerIconId", "default"}
+                {"playerIconId", "default"},
+                {"exp", "0"}
             },
             Permission = UserDataPermission.Public
         }, result =>

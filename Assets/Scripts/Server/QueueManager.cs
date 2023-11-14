@@ -28,7 +28,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
     private LobbyUIManager lobbyUIManager;
     
     public TicketInfo info;
-    private string currentTicketId;
+    public string currentTicketId;
 
     public string currentCartId;
     public Hashtable customProperties;
