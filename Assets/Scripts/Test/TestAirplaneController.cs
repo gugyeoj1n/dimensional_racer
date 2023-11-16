@@ -26,6 +26,11 @@ public class TestAirplaneController : MonoBehaviourPunCallbacks
     private float yawValue;
     private float rollValue;
 
+    public float currentTime;
+    public float previousTime;
+    public Vector3 previousPosition;
+    public Quaternion previousRotation;
+
     void MoveAircraft()
     {
         Vector3 lerpVector = new Vector3(pitchValue * pitchAmount, yawValue * yawAmount, -rollValue * rollAmount);
@@ -38,12 +43,42 @@ public class TestAirplaneController : MonoBehaviourPunCallbacks
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        previousPosition = transform.position;
+        previousRotation = transform.rotation;
         minSpeed = speed;
     }
+    
+    public void Back()
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.Sleep();
+        
+        transform.position = previousPosition;
+        transform.rotation = previousRotation;
+        
+        rb.WakeUp();
+    }
+
+    void Update()
+    {
+        currentTime = Time.time;
+        if (currentTime - previousTime >= 10f)
+        {
+            previousPosition = transform.position;
+            previousRotation = transform.rotation;
+            previousTime = currentTime;
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Back();
+        }
+    }
+    
 
     void FixedUpdate()
     {
-        
         pitchValue = Input.GetAxisRaw("Vertical");
         rollValue = Input.GetAxisRaw("Roll");
         yawValue = Input.GetAxisRaw("Horizontal");

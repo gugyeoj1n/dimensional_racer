@@ -15,7 +15,6 @@ public class TestPlayerManager : MonoBehaviourPunCallbacks
 
     public ParticleSystem[] particles;
     
-    
     void Start()
     {
         airplaneController = GetComponent<TestAirplaneController>();
@@ -34,7 +33,7 @@ public class TestPlayerManager : MonoBehaviourPunCallbacks
     }
 
     void Update()
-    { 
+    {
         if (Input.GetKey(KeyCode.LeftShift))
         {
             Accelerate();

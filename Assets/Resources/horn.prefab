@@ -9665,6 +9665,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -9772,9 +9784,9 @@ MonoBehaviour:
   rollAmount: 300
   pitchAmount: 100
   yawAmount: 200
-  speed: 8000
-  minSpeed: 8000
-  maxSpeed: 12000
+  speed: 5000
+  minSpeed: 5000
+  maxSpeed: 7000
   lerpAmount: 1
 --- !u!114 &-237973732757892376
 MonoBehaviour:
@@ -9892,8 +9904,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486207dd2b80449f89ad412e7865040e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: -10
-  height: 15
+  distance: -2
+  height: 5
   smoothSpeed: 3
 --- !u!4 &8946525187190880069 stripped
 Transform:

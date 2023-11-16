@@ -34,8 +34,8 @@ public class OnMouseWindow : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private string GetSpeedTier(float speed)
     {
-        if (speed <= 8000) return "평범함";
-        else if (speed is > 8000 and <= 9000) return "훌륭함";
+        if (speed <= 5000) return "평범함";
+        else if (speed is > 5000 and <= 6000) return "훌륭함";
         else return "압도적임";
     }
 

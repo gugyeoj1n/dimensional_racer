@@ -35,7 +35,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2796512429150142287}
@@ -128,9 +128,9 @@ MonoBehaviour:
   rollAmount: 300
   pitchAmount: 100
   yawAmount: 200
-  speed: 8500
-  minSpeed: 8500
-  maxSpeed: 13000
+  speed: 6000
+  minSpeed: 6000
+  maxSpeed: 9000
   lerpAmount: 1
 --- !u!114 &5724869193863917059
 MonoBehaviour:
@@ -188,8 +188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486207dd2b80449f89ad412e7865040e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: -10
-  height: 15
+  distance: -2
+  height: 5
   smoothSpeed: 3
 --- !u!114 &4316457428776386734
 MonoBehaviour:
