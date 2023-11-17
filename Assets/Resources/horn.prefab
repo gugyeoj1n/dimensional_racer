@@ -9905,8 +9905,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: -2
-  height: 5
-  smoothSpeed: 3
+  height: 4
+  smoothSpeed: 5
 --- !u!4 &8946525187190880069 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 55ac3fdefa83c6244b5fa92daebe0b5f, type: 3}

@@ -189,8 +189,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: -2
-  height: 5
-  smoothSpeed: 3
+  height: 4
+  smoothSpeed: 5
 --- !u!114 &4316457428776386734
 MonoBehaviour:
   m_ObjectHideFlags: 0

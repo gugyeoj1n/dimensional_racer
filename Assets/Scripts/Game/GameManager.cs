@@ -16,13 +16,19 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
     // 1등이 들어오면 10초 세고 끝 못들어오면 리타이어
     // 정산하고 로비로 복귀
 
+    public bool isReady = false;
     public bool isStarted = false;
+    public bool firstClear = false;
     public float time = 300f;
 
     public GameObject playerPrefab;
 
+    private IngameUIManager ui;
+
     public void Start()
     {
+        ui = FindObjectOfType<IngameUIManager>();
+        
         Debug.Log("현재 룸 인원수 : " + PhotonNetwork.CurrentRoom.PlayerCount);
         StartCoroutine(CheckRoomFull());
         //Vector3 startPos = Vector3.up + Vector3.right * PhotonNetwork.CurrentRoom.PlayerCount;
@@ -31,7 +37,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private IEnumerator CheckRoomFull()
     {
-        while (!isStarted)
+        while (!isReady)
         {
             Debug.Log("전원 입장 기다리는 중");
             if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
@@ -39,6 +45,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 if (PhotonNetwork.IsMasterClient)
                 {
                     SpawnPlayers();
+                    isReady = true;
                 }
             }
 
@@ -68,7 +75,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void StartGame()
     {
-        isStarted = true;
         PhotonView[] players = FindObjectsOfType<PhotonView>();
         foreach (PhotonView player in players)
         {
@@ -76,22 +82,28 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             if (player.Controller == PhotonNetwork.LocalPlayer)
             {
                 player.gameObject.GetComponent<PlayerManager>().StartCamera();
+
+                ui.airplaneController = player.gameObject.GetComponent<AirplaneController>();
+                ui.playerManager = player.gameObject.GetComponent<PlayerManager>();
             }
         }
-        
         StartCoroutine(CountStart());
     }
 
     IEnumerator CountStart()
     {
-        Debug.Log("3");
+        ui.countText.gameObject.SetActive(true);
+        ui.countText.text = "3";
         yield return new WaitForSeconds(1f);
-        Debug.Log("2");
+        ui.countText.text = "2";
         yield return new WaitForSeconds(1f);
-        Debug.Log("1");
+        ui.countText.text = "1";
         yield return new WaitForSeconds(1f);
-        Debug.Log("GAME START");
+        ui.countText.text = "Go!";
+        isStarted = true;
         UnlockInput(true);
+        yield return new WaitForSeconds(1f);
+        ui.countText.gameObject.SetActive(false);
     }
 
     private void UnlockInput(bool locked)
@@ -102,16 +114,35 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             if (player.GameObject().GetPhotonView().Controller == PhotonNetwork.LocalPlayer)
             {
                 player.GameObject().GetComponent<AirplaneController>().enabled = locked;
-                if(!locked)
+                if (!locked)
                     Destroy(player.GameObject().GetComponent<Rigidbody>());
+                else
+                    player.GameObject().GetComponent<CameraFollow>().smoothSpeed = 10f;
             }
             player.InitParticles();
         }
     }
 
-    public void EndGame(int winnerId)
+    public void EndGame()
     {
-        Debug.LogFormat("{0}번 플레이어의 승리!", winnerId);
+        //Debug.LogFormat("{0}번 플레이어의 승리!", winnerId);
+        //isStarted = false;
+        //UnlockInput(false);
+
+        RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
+        SendOptions sendOptions = new SendOptions { Reliability = true };
+        PhotonNetwork.RaiseEvent(2, null, options, sendOptions);
+    }
+
+    IEnumerator EndCount()
+    {
+        ui.countText.gameObject.SetActive(true);
+        for (int i = 10; i > 0; i--)
+        {
+            ui.countText.text = i.ToString();
+            yield return new WaitForSeconds(1f);
+        }
+        ui.countText.text = "소코마데!";
         isStarted = false;
         UnlockInput(false);
     }
@@ -155,6 +186,12 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             Debug.Log("EVENT CODE 1 RECEIVED");
             StartGame();
+        }
+        
+        // 게임 종료
+        else if (eventCode == 2)
+        {
+            StartCoroutine(EndCount());
         }
     }
 }

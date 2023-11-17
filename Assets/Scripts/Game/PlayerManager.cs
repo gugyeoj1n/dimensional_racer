@@ -35,7 +35,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     void Update()
     {
         if (!photonView.IsMine || !gameManager.isStarted) return;
-
+        
+        
+        
         if (Input.GetKey(KeyCode.LeftShift))
         {
             Accelerate();
@@ -58,7 +60,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
             return;
 
         fuel -= acceleration * 0.5f * Time.deltaTime;
-        airplaneController.speed += acceleration * 10f * Time.deltaTime;
+        airplaneController.speed += acceleration * 5f * Time.deltaTime;
         SetParticles(true);
     }
 
@@ -76,7 +78,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         if (airplaneController.speed <= airplaneController.minSpeed)
             return;
 
-        airplaneController.speed -= 100f * Time.deltaTime;
+        airplaneController.speed -= 200f * Time.deltaTime;
         SetParticles(false);
     }
 }
