@@ -16,6 +16,7 @@ public class TestAirplaneController : MonoBehaviourPunCallbacks
     public float speed;
     public float minSpeed;
     public float maxSpeed;
+    public int boosterAmount;
     [SerializeField]
     private float lerpAmount;
 
@@ -30,6 +31,7 @@ public class TestAirplaneController : MonoBehaviourPunCallbacks
     public float previousTime;
     public Vector3 previousPosition;
     public Quaternion previousRotation;
+    public TestPlayerManager testPlayerManager;
 
     void MoveAircraft()
     {
@@ -42,6 +44,7 @@ public class TestAirplaneController : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        testPlayerManager = FindObjectOfType<TestPlayerManager>();
         rb = GetComponent<Rigidbody>();
         previousPosition = transform.position;
         previousRotation = transform.rotation;
@@ -74,6 +77,11 @@ public class TestAirplaneController : MonoBehaviourPunCallbacks
         {
             Back();
         }
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Boost();
+        }
     }
     
 
@@ -86,4 +94,17 @@ public class TestAirplaneController : MonoBehaviourPunCallbacks
         MoveAircraft();
     }
 
+    void Boost()
+    {
+        float curSpeed = speed;
+        if (boosterAmount > 0)
+        {
+            while (speed < maxSpeed)
+            {
+                speed += testPlayerManager.acceleration * 15f * Time.deltaTime;
+            }
+            boosterAmount--;
+        }
+    }
+    
 }

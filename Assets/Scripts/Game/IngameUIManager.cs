@@ -24,17 +24,40 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
     public PlayerManager playerManager;
 
     private GameManager gameManager;
+    private TestAirplaneController testAirplaneController;
+    public GameObject ItemIcon1;
+    public GameObject ItemIcon2;
     
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        testAirplaneController = FindObjectOfType<TestAirplaneController>();
+        item1 = ItemIcon1.GetComponent<Image>();
+        item2 = ItemIcon2.GetComponent<Image>();
     }
 
     void Update()
     {
-        if (!gameManager.isStarted) return;
+        //if (!gameManager.isStarted) return;
 
-        currentSpeedText.text = CalculateSpeed(airplaneController.speed).ToString();
+        //currentSpeedText.text = CalculateSpeed(airplaneController.speed).ToString();
+
+        if (testAirplaneController.boosterAmount == 1)
+        {
+            item1.enabled = true;
+            item2.enabled = false;
+        }
+        else if (testAirplaneController.boosterAmount == 2)
+        {
+            item1.enabled = true;
+            item2.enabled = true;
+        }
+        else
+        {
+            item1.enabled = false;
+            item2.enabled = false;
+        }
+        
     }
 
 
