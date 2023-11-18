@@ -14,6 +14,7 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
     public TMP_Text maxStageText;
     public Image fuelImage;
     public TMP_Text timeText;
+    private float curTime = 0f;
 
     public TMP_Text countText;
 
@@ -57,7 +58,17 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
             item1.enabled = false;
             item2.enabled = false;
         }
-        
+
+        if (true) // true -> gameManager.isStarted
+        {
+            curTime += Time.deltaTime;
+            int minutes = Mathf.FloorToInt(curTime / 60);
+            int seconds = Mathf.FloorToInt(curTime % 60);
+            float millisecondsFloat = (curTime * 1000) % 1000;
+            string millisecondsString = millisecondsFloat.ToString("000");
+            timeText.text = "Time / " + minutes + " : " + seconds + " : " + millisecondsString;
+        }
+
     }
 
 
