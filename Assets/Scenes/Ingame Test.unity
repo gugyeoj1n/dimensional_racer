@@ -1098,7 +1098,7 @@ MonoBehaviour:
   currentStageText: {fileID: 0}
   maxStageText: {fileID: 0}
   fuelImage: {fileID: 0}
-  timeText: {fileID: 0}
+  timeText: {fileID: 1229270010}
   countText: {fileID: 0}
   item1: {fileID: 0}
   item2: {fileID: 0}
@@ -1106,6 +1106,9 @@ MonoBehaviour:
   playerManager: {fileID: 0}
   ItemIcon1: {fileID: 1026202394}
   ItemIcon2: {fileID: 238865490}
+  Fuel: {fileID: 1807611372}
+  isShifting: 0
+  currentFillAmount: 0
 --- !u!4 &1139117723
 Transform:
   m_ObjectHideFlags: 0
@@ -1178,7 +1181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Time / 0 : 33 : 04'
+  m_text: 'Time / 0 : 00 : 00'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c1427a76d2afa4bdf9d699ef0a646219, type: 2}
   m_sharedMaterial: {fileID: 2959425826267408056, guid: c1427a76d2afa4bdf9d699ef0a646219, type: 2}

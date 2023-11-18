@@ -55,7 +55,7 @@ public class TestPlayerManager : MonoBehaviourPunCallbacks
         if (fuel <= 0 || airplaneController.speed >= airplaneController.maxSpeed)
             return;
 
-        fuel -= acceleration * 0.5f * Time.deltaTime;
+        fuel -= acceleration * 5f * Time.deltaTime;
         airplaneController.speed += acceleration * 10f * Time.deltaTime;
         SetParticles(true);
     }
@@ -73,8 +73,9 @@ public class TestPlayerManager : MonoBehaviourPunCallbacks
     {
         if (airplaneController.speed <= airplaneController.minSpeed)
             return;
-
-        airplaneController.speed -= 100f * Time.deltaTime;
+        
+        if (fuel <= maxFuel) fuel += acceleration * 5f * Time.deltaTime;
+        airplaneController.speed -= 500f * Time.deltaTime;
         SetParticles(false);
     }
 }
