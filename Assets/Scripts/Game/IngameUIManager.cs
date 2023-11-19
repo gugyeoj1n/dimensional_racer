@@ -14,9 +14,12 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
     public TMP_Text maxStageText;
     public Image fuelImage;
     public TMP_Text timeText;
-    private float curTime = 0f;
 
     public TMP_Text countText;
+
+    public Transform playersContent;
+    public GameObject playerStatus;
+    public List<GameObject> playerStatusList;
 
     public Image item1;
     public Image item2;
@@ -40,21 +43,32 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
     
     void Start()
     {
-        testPlayerManager = FindObjectOfType<TestPlayerManager>();
+        //testPlayerManager = FindObjectOfType<TestPlayerManager>();
         gameManager = FindObjectOfType<GameManager>();
-        testAirplaneController = FindObjectOfType<TestAirplaneController>();
-        item1 = ItemIcon1.GetComponent<Image>();
-        item2 = ItemIcon2.GetComponent<Image>();
-        fuelImage = Fuel.GetComponent<Image>();
+        //testAirplaneController = FindObjectOfType<TestAirplaneController>();
+        //item1 = ItemIcon1.GetComponent<Image>();
+        //item2 = ItemIcon2.GetComponent<Image>();
+        //fuelImage = Fuel.GetComponent<Image>();
+    }
+
+    public void InitPlayers(Dictionary<PlayerProperty, int>.KeyCollection target)
+    {
+        playerStatusList = new List<GameObject>();
+        foreach (PlayerProperty player in target)
+        {
+            GameObject playerInst = Instantiate(playerStatus, playersContent);
+            playerInst.transform.GetChild(0).GetComponent<TMP_Text>().text = player.name;
+            playerStatusList.Add(playerInst);
+        }
     }
 
     void Update()
     {
-        //if (!gameManager.isStarted) return;
+        if (!gameManager.isStarted) return;
 
-        //currentSpeedText.text = CalculateSpeed(airplaneController.speed).ToString();
+        currentSpeedText.text = CalculateSpeed(airplaneController.speed).ToString();
 
-        if (testAirplaneController.boosterAmount == 1)
+        /*if (testAirplaneController.boosterAmount == 1)
         {
             item1.enabled = true;
             item2.enabled = false;
@@ -68,29 +82,24 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
         {
             item1.enabled = false;
             item2.enabled = false;
-        }
+        }*/
 
-        if (true) // true -> gameManager.isStarted
+        if (gameManager.isStarted) // true -> gameManager.isStarted
         {
-            curTime += Time.deltaTime;
-            int minutes = Mathf.FloorToInt(curTime / 60);
-            int seconds = Mathf.FloorToInt(curTime % 60);
-            float millisecondsFloat = (curTime * 1000) % 1000;
+            int minutes = Mathf.FloorToInt(gameManager.time / 60);
+            int seconds = Mathf.FloorToInt(gameManager.time % 60);
+            float millisecondsFloat = (gameManager.time * 1000) % 1000;
             string millisecondsString = millisecondsFloat.ToString("000");
             timeText.text = "Time / " + minutes + " : " + seconds + " : " + millisecondsString;
         }
         
-        fuelImage.fillAmount = testPlayerManager.fuel / testPlayerManager.maxFuel;
-        fuelImage.color = Color.Lerp(endColor, startColor, fuelImage.fillAmount);
+        //fuelImage.fillAmount = testPlayerManager.fuel / testPlayerManager.maxFuel;
+        //fuelImage.color = Color.Lerp(endColor, startColor, fuelImage.fillAmount);
 
     }
-
-
+    
     private int CalculateSpeed(float speed)
     {
         return (int)(speed * 0.0375f - 75f);
     }
-    
-    
-
 }

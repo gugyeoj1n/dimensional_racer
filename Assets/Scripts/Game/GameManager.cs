@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
@@ -7,13 +8,21 @@ using Photon.Pun;
 using Photon.Realtime;
 using Unity.VisualScripting;
 
-public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
+public class PlayerProperty
 {
+    public string name;
+    public string client;
+    public int currentStage = 1;
+}
+
+public class GameManager : MonoBehaviourPunCallbacks {
     public bool isReady = false;
     public bool isStarted = false;
     public bool firstClear = false;
     public float time = 0f;
 
+    public Dictionary<PlayerProperty, int> playerProperties;
+    
     public GameObject playerPrefab;
 
     private IngameUIManager ui;
@@ -38,16 +47,23 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 if (PhotonNetwork.IsMasterClient)
                 {
                     SpawnPlayers();
-                    isReady = true;
                 }
+                
+                isReady = true;
             }
 
             yield return new WaitForSecondsRealtime(0.1f);
         }
     }
-    
+
     private void SpawnPlayers()
     {
+        //playerProperties = new Dictionary<PlayerProperty, GameObject>();
+
+        string[] names = new string[PhotonNetwork.CurrentRoom.Players.Count];
+        string[] clients = new string[PhotonNetwork.CurrentRoom.Players.Count];
+        int[] photonViews = new int[PhotonNetwork.CurrentRoom.Players.Count];
+
         int cnt = 0;
         foreach (KeyValuePair<int, Player> pl in PhotonNetwork.CurrentRoom.Players)
         {
@@ -55,19 +71,38 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             
             string cartId = (string) pl.Value.CustomProperties["cartId"];
             GameObject player = PhotonNetwork.Instantiate(cartId, Vector3.up * 5f + Vector3.right * (cnt * 30f), Quaternion.identity, 0);
-            //int targetPos = (player.GetComponent<PhotonView>().ViewID % 1000 - 1) * 50;
             
             player.GetComponent<PhotonView>().TransferOwnership(pl.Value);
+            
+            /*playerProperties.Add(new PlayerProperty
+            {
+                name = pl.Value.NickName,
+                client = (string)pl.Value.CustomProperties["cartId"]
+            }, player);*/
+
+            names[cnt] = pl.Value.NickName;
+            clients[cnt] = (string)pl.Value.CustomProperties["cartId"];
+            photonViews[cnt] = player.GetComponent<PhotonView>().ViewID;
             cnt++;
         }
+        
+        for(int i = 0; i < names.Length; i++)
+        {
+            Debug.Log("정보 확인 : " + names[i] + " / " + clients[i] + " / " + photonViews[i].ToString());
+        }
+
+        object[] content = new object[] { names, clients, photonViews };
         
         RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         SendOptions sendOptions = new SendOptions { Reliability = true };
         PhotonNetwork.RaiseEvent(1, null, options, sendOptions);
+        Debug.Log("RaiseEvent 실행함");
     }
 
     public void StartGame()
     {
+        ui.InitPlayers(playerProperties.Keys);
+        
         PhotonView[] players = FindObjectsOfType<PhotonView>();
         foreach (PhotonView player in players)
         {
@@ -136,7 +171,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
             ui.countText.text = i.ToString();
             yield return new WaitForSeconds(1f);
         }
-        ui.countText.text = "소코마데!";
+        ui.countText.text = "Over!";
         isStarted = false;
         UnlockInput(false);
     }
@@ -149,20 +184,29 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void CountTime()
     {
-        time += Time.deltaTime; 
-        Debug.Log(time);
-            // 여기는 UI Manager로 넘기기
-            //timeText.text = Mathf.Floor(time / 60) + ":" + Mathf.Floor(time % 60);
+        time += Time.fixedDeltaTime; 
     }
 
     public void OnEvent(EventData photonEvent)
     {
         byte eventCode = photonEvent.Code;
+        Debug.Log("RaiseEvent 확인됨 : " + eventCode);
         
         // 게임 시작
         if (eventCode == 1)
         {
-            Debug.Log("EVENT CODE 1 RECEIVED");
+            object[] data = (object[]) photonEvent.CustomData;
+
+            string[] names = (string[])data[0];
+            string[] clients = (string[])data[1];
+            int[] views = (int[])data[2];
+
+            playerProperties = new Dictionary<PlayerProperty, int>();
+            for (int i = 0; i < names.Length; i++)
+            {
+                playerProperties.Add(new PlayerProperty { name = names[i], client = clients[i] }, views[i]);
+            }
+            
             StartGame();
         }
         
