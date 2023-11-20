@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine.UI;
 using Photon;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class IngameUIManager : MonoBehaviourPunCallbacks
 {
@@ -33,6 +34,12 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
     public GameObject ItemIcon1;
     public GameObject ItemIcon2;
     public GameObject Fuel;
+
+    public GameObject settlePanel;
+    public TMP_Text winnerNameText;
+    public TMP_Text winnerTimeText;
+    public TMP_Text coinAddText;
+    public TMP_Text ratingText;
     
     private Color startColor = Color.green;
     private Color endColor = Color.red;
@@ -60,6 +67,15 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
             playerInst.transform.GetChild(0).GetComponent<TMP_Text>().text = player.name;
             playerStatusList.Add(playerInst);
         }
+    }
+    
+    public void SetSettlePanel(string winnerName, string winnerTime, int coin, int rating)
+    {
+        settlePanel.SetActive(true);
+        winnerNameText.text = winnerName;
+        winnerTimeText.text = winnerTime;
+        coinAddText.text = string.Format("+ {0} Coins", coin);
+        ratingText.text = string.Format("{0} {1} Rank Points", (rating > 0) ? "+" : "-", Mathf.Abs(rating));
     }
 
     void Update()
@@ -97,7 +113,17 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
         //fuelImage.color = Color.Lerp(endColor, startColor, fuelImage.fillAmount);
 
     }
-    
+
+    public void BackToLobby()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene(2);
+    }
+
     private int CalculateSpeed(float speed)
     {
         return (int)(speed * 0.0375f - 75f);

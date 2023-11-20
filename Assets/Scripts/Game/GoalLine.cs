@@ -18,13 +18,13 @@ public class GoalLine : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            //int winner = other.gameObject.GetComponent<PhotonView>().ViewID;
+            int winner = other.gameObject.GetComponent<PhotonView>().ViewID;
             //Debug.LogFormat("WINNER VIEWID : {0}", winner);
             //string winnerNickname = accountManager.GetWinnerNickname(winner);
             //gameManager.EndGame(winner % 1000);
             
             if(!gameManager.firstClear)
-                gameManager.EndGame();
+                gameManager.EndGame(winner);
         }
     }
 }

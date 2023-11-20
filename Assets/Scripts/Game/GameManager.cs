@@ -15,7 +15,7 @@ public class PlayerProperty
     public int currentStage = 1;
 }
 
-public class GameManager : MonoBehaviourPunCallbacks {
+public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
     public bool isReady = false;
     public bool isStarted = false;
     public bool firstClear = false;
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviourPunCallbacks {
         
         RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         SendOptions sendOptions = new SendOptions { Reliability = true };
-        PhotonNetwork.RaiseEvent(1, null, options, sendOptions);
+        PhotonNetwork.RaiseEvent(1, content, options, sendOptions);
         Debug.Log("RaiseEvent 실행함");
     }
 
@@ -151,18 +151,28 @@ public class GameManager : MonoBehaviourPunCallbacks {
         }
     }
 
-    public void EndGame()
+    public void EndGame(int winnerId)
     {
         //Debug.LogFormat("{0}번 플레이어의 승리!", winnerId);
         //isStarted = false;
         //UnlockInput(false);
+        string winnerName = "";
+        foreach (KeyValuePair<PlayerProperty, int> kvp in playerProperties)
+        {
+            if (kvp.Value == winnerId)
+            {
+                winnerName = string.Format("{0} ({1})", kvp.Key.name, kvp.Key.client);
+            }
+        }
+
+        object[] data = new object[] { winnerName };
 
         RaiseEventOptions options = new RaiseEventOptions { Receivers = ReceiverGroup.All };
         SendOptions sendOptions = new SendOptions { Reliability = true };
-        PhotonNetwork.RaiseEvent(2, null, options, sendOptions);
+        PhotonNetwork.RaiseEvent(2, data, options, sendOptions);
     }
 
-    IEnumerator EndCount()
+    IEnumerator EndCount(string winner)
     {
         firstClear = true;
         ui.countText.gameObject.SetActive(true);
@@ -174,6 +184,8 @@ public class GameManager : MonoBehaviourPunCallbacks {
         ui.countText.text = "Over!";
         isStarted = false;
         UnlockInput(false);
+        yield return new WaitForSeconds(3f);
+        ui.SetSettlePanel(winner, time.ToString(), 100, 100);
     }
 
     void Update()
@@ -213,7 +225,8 @@ public class GameManager : MonoBehaviourPunCallbacks {
         // 게임 종료
         else if (eventCode == 2)
         {
-            StartCoroutine(EndCount());
+            object[] data = (object[])photonEvent.CustomData;
+            StartCoroutine(EndCount((string)data[0]));
         }
     }
 }

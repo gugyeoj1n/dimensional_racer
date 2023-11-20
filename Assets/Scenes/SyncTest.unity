@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641228, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4993,6 +4993,11 @@ MonoBehaviour:
   ItemIcon1: {fileID: 0}
   ItemIcon2: {fileID: 0}
   Fuel: {fileID: 0}
+  settlePanel: {fileID: 1577382353}
+  winnerNameText: {fileID: 393209511}
+  winnerTimeText: {fileID: 130495612}
+  coinAddText: {fileID: 1579679105}
+  ratingText: {fileID: 770777842}
   isShifting: 0
   currentFillAmount: 0
 --- !u!4 &1377016295
@@ -5753,7 +5758,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1641743180}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1377016294}
+        m_TargetAssemblyTypeName: IngameUIManager, Assembly-CSharp
+        m_MethodName: BackToLobby
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1641743180
 MonoBehaviour:
   m_ObjectHideFlags: 0
