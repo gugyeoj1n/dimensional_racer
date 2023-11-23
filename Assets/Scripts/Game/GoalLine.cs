@@ -25,6 +25,8 @@ public class GoalLine : MonoBehaviour
             
             if(!gameManager.firstClear)
                 gameManager.EndGame(winner);
+            
+            gameManager.endSequence.Add(winner);
         }
     }
 }

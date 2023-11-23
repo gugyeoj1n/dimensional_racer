@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using ExitGames.Client.Photon;
 using UnityEngine;
 using Photon;
@@ -22,6 +23,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
     public float time = 0f;
 
     public Dictionary<PlayerProperty, int> playerProperties;
+    public List<int> endSequence;
+
+    public int myId;
     
     public GameObject playerPrefab;
 
@@ -29,6 +33,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
 
     public void Start()
     {
+        endSequence = new List<int>();
         ui = FindObjectOfType<IngameUIManager>();
         
         Debug.Log("현재 룸 인원수 : " + PhotonNetwork.CurrentRoom.PlayerCount);
@@ -110,7 +115,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
             if (player.Controller == PhotonNetwork.LocalPlayer)
             {
                 player.gameObject.GetComponent<PlayerManager>().StartCamera();
-
+                myId = player.ViewID;
                 ui.airplaneController = player.gameObject.GetComponent<AirplaneController>();
                 ui.playerManager = player.gameObject.GetComponent<PlayerManager>();
             }
@@ -153,9 +158,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
 
     public void EndGame(int winnerId)
     {
-        //Debug.LogFormat("{0}번 플레이어의 승리!", winnerId);
-        //isStarted = false;
-        //UnlockInput(false);
         string winnerName = "";
         foreach (KeyValuePair<PlayerProperty, int> kvp in playerProperties)
         {
@@ -174,7 +176,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
 
     IEnumerator EndCount(string winner)
     {
-        firstClear = true;
+        firstClear = true;  
         ui.countText.gameObject.SetActive(true);
         for (int i = 10; i > 0; i--)
         {
@@ -185,7 +187,26 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
         isStarted = false;
         UnlockInput(false);
         yield return new WaitForSeconds(3f);
-        ui.SetSettlePanel(winner, time.ToString(), 100, 100);
+        
+        int money = 300;
+        int rate = 50;
+        if (endSequence.First() == myId)
+        {
+            money = 800;
+            rate = 200;
+        } else if (endSequence.Last() == myId)
+        {
+            rate = -100;
+        }
+        
+        Settle();
+        ui.SetSequencePanel(endSequence, playerProperties);
+        ui.SetSettlePanel(winner, time.ToString(), money, rate);
+    }
+
+    public void Settle()
+    {
+        
     }
 
     void Update()
@@ -217,6 +238,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
             for (int i = 0; i < names.Length; i++)
             {
                 playerProperties.Add(new PlayerProperty { name = names[i], client = clients[i] }, views[i]);
+                Debug.Log("Property 추가 : " + names[i] + " / " + views[i]);
             }
             
             StartGame();

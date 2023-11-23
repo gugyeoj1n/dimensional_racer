@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Photon.Pun;
 using UnityEngine;
 using TMPro;
@@ -36,6 +37,7 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
     public GameObject Fuel;
 
     public GameObject settlePanel;
+    public GameObject[] sequencePanels;
     public TMP_Text winnerNameText;
     public TMP_Text winnerTimeText;
     public TMP_Text coinAddText;
@@ -76,6 +78,27 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
         winnerTimeText.text = winnerTime;
         coinAddText.text = string.Format("+ {0} Coins", coin);
         ratingText.text = string.Format("{0} {1} Rank Points", (rating > 0) ? "+" : "-", Mathf.Abs(rating));
+    }
+
+    public void SetSequencePanel(List<int> sequence, Dictionary<PlayerProperty, int> players)
+    {
+        int i = 0;
+        foreach (int id in sequence)
+        {
+            Debug.Log("정산 ID : " + id);
+            var sequenceObject = sequencePanels[i];
+            string status = "";
+            foreach (KeyValuePair<PlayerProperty, int> kvp in players)
+            {
+                if (kvp.Value == id)
+                {
+                    sequenceObject.transform.GetChild(1).GetComponent<TMP_Text>().text =
+                        string.Format("{0} ({1})", kvp.Key.name, kvp.Key.client);
+                }
+            }
+
+            i++;
+        }
     }
 
     void Update()

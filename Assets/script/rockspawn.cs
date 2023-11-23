@@ -4,27 +4,26 @@ using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    public GameObject[] prefabs; //Âï¾î³¾ °ÔÀÓ ¿ÀºêÁ§Æ®¸¦ ³Ö¾î¿ä
-                                 //¹è¿­·Î ¸¸µç ÀÌÀ¯´Â °ÔÀÓ ¿ÀºêÁ§Æ®¸¦
-                                 //´Ù¾çÇÏ°Ô Âï¾î³»±â À§ÇØ¼­ ÀÔ´Ï´Ù
-    private BoxCollider area;    //¹Ú½ºÄİ¶óÀÌ´õÀÇ »çÀÌÁî¸¦ °¡Á®¿À±â À§ÇÔ
-    public int count = 3;      //Âï¾î³¾ °ÔÀÓ ¿ÀºêÁ§Æ® °¹¼ö
+    public GameObject[] prefabs;
+    private BoxCollider area;
+    public int minCount = 1; // ìµœì†Œ ìƒì„± ê°¯ìˆ˜
+    public int maxCount = 3; // ìµœëŒ€ ìƒì„± ê°¯ìˆ˜
 
-    private List<GameObject> gameObject = new List<GameObject>();
+    private List<GameObject> spawnedObjects = new List<GameObject>();
 
     void Start()
     {
         area = GetComponent<BoxCollider>();
 
-        for (int i = 0; i < count; ++i)//count ¼ö ¸¸Å­ »ı¼ºÇÑ´Ù
+        int randomCount = Random.Range(minCount, maxCount + 1); // ìµœì†Œì—ì„œ ìµœëŒ€ê¹Œì§€ì˜ ëœë¤í•œ ê°¯ìˆ˜
+
+        for (int i = 0; i < randomCount; ++i)
         {
-            Spawn();//»ı¼º + ½ºÆùÀ§Ä¡¸¦ Æ÷ÇÔÇÏ´Â ÇÔ¼ö
+            Spawn();
         }
 
         area.enabled = false;
     }
-    //¹Ø¿¡ ÄÚµå°¡ ´õ ÀÖ½À´Ï´Ù
-    //ÇØ´ç ÇÔ¼öµéÀº À§ ½ºÅ©¸³Æ®¿¡ Æ÷ÇÔµÇ´Â ÇÔ¼öµéÀÓ
 
     private Vector3 GetRandomPosition()
     {
@@ -39,7 +38,6 @@ public class NewBehaviourScript : MonoBehaviour
 
         return spawnPos;
     }
-    //ÇØ´ç ÇÔ¼öµéÀº À§ ½ºÅ©¸³Æ®¿¡ Æ÷ÇÔµÇ´Â ÇÔ¼öµéÀÓ
 
     private void Spawn()
     {
@@ -47,9 +45,12 @@ public class NewBehaviourScript : MonoBehaviour
 
         GameObject selectedPrefab = prefabs[selection];
 
-        Vector3 spawnPos = GetRandomPosition();//·£´ıÀ§Ä¡ÇÔ¼ö
+        Vector3 spawnPos = GetRandomPosition();
 
-        GameObject instance = Instantiate(selectedPrefab, spawnPos, Quaternion.identity);
-        gameObject.Add(instance);
+        // ìˆ˜ì •ëœ ë¶€ë¶„: xì¶• ë°©í–¥ì„ -90ìœ¼ë¡œ ì„¤ì •
+        Quaternion spawnRotation = Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0));
+
+        GameObject instance = Instantiate(selectedPrefab, spawnPos, spawnRotation);
+        spawnedObjects.Add(instance);
     }
-}//½ºÅ©¸³Æ® Á¾·á
+}
