@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
     
     public GameObject playerPrefab;
 
+    public Transform spawnPoint;
+
     private IngameUIManager ui;
     private AccountManager accountManager;
 
@@ -80,7 +82,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
             Debug.Log("플레이어 확인 : " + pl.Value.NickName);
             
             string cartId = (string) pl.Value.CustomProperties["cartId"];
-            GameObject player = PhotonNetwork.Instantiate(cartId, Vector3.up * 5f + Vector3.right * (cnt * 30f), Quaternion.identity, 0);
+            GameObject player = PhotonNetwork.Instantiate(cartId, spawnPoint.position + Vector3.right * (cnt * 10f), Quaternion.identity, 0);
             
             player.GetComponent<PhotonView>().TransferOwnership(pl.Value);
             
@@ -257,7 +259,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
     public void OnEvent(EventData photonEvent)
     {
         byte eventCode = photonEvent.Code;
-        Debug.Log("RaiseEvent 확인됨 : " + eventCode);
         
         // 게임 시작
         if (eventCode == 1)

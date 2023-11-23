@@ -1345,6 +1345,7 @@ MonoBehaviour:
   ItemIcon2: {fileID: 238865490}
   Fuel: {fileID: 1807611372}
   settlePanel: {fileID: 0}
+  sequencePanels: []
   winnerNameText: {fileID: 0}
   winnerTimeText: {fileID: 0}
   coinAddText: {fileID: 0}
@@ -1927,7 +1928,9 @@ PrefabInstance:
     - {fileID: 6662541904195104130, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
     - {fileID: 2409462552679414418, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
     - {fileID: 3049031789705216192, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1341131504258169651, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
+    - {fileID: 6713553171347144480, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7664518307048506584, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
       insertIndex: -1
@@ -2028,7 +2031,11 @@ MonoBehaviour:
   isStarted: 0
   firstClear: 0
   time: 0
+  isRank: 0
+  endSequence: 
+  myId: 0
   playerPrefab: {fileID: 0}
+  spawnPoint: {fileID: 0}
 --- !u!4 &1533950026
 Transform:
   m_ObjectHideFlags: 0
@@ -2808,7 +2815,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: dc1a05fba9a6af241a25a35b4caf5e27, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

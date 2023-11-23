@@ -22,8 +22,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
         fuel = maxFuel;
 
-        InitParticles();
-        StartCamera();
     }
 
     public void InitParticles()
@@ -34,6 +32,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        if (!photonView.IsMine) return;
+        
         if (Input.GetKey(KeyCode.LeftShift))
         {
             Accelerate();
