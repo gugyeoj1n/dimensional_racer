@@ -21,7 +21,6 @@ public class AccountManager : MonoBehaviourPunCallbacks
     public string entityId;
     [HideInInspector]
     public string entityType;
-    [HideInInspector]
     public string currentUserId;
     public string userName;
     public int coin;

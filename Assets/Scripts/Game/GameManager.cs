@@ -7,6 +7,8 @@ using UnityEngine;
 using Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using PlayFab;
+using PlayFab.ClientModels;
 using Unity.VisualScripting;
 
 public class PlayerProperty
@@ -21,6 +23,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
     public bool isStarted = false;
     public bool firstClear = false;
     public float time = 0f;
+    public bool isRank = false;
 
     public Dictionary<PlayerProperty, int> playerProperties;
     public List<int> endSequence;
@@ -30,11 +33,13 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
     public GameObject playerPrefab;
 
     private IngameUIManager ui;
+    private AccountManager accountManager;
 
     public void Start()
     {
         endSequence = new List<int>();
         ui = FindObjectOfType<IngameUIManager>();
+        accountManager = FindObjectOfType<AccountManager>();
         
         Debug.Log("현재 룸 인원수 : " + PhotonNetwork.CurrentRoom.PlayerCount);
         StartCoroutine(CheckRoomFull());
@@ -199,14 +204,43 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
             rate = -100;
         }
         
-        Settle();
-        ui.SetSequencePanel(endSequence, playerProperties);
-        ui.SetSettlePanel(winner, time.ToString(), money, rate);
-    }
-
-    public void Settle()
-    {
-        
+        PlayFabClientAPI.AddUserVirtualCurrency(new AddUserVirtualCurrencyRequest()
+        {
+            Amount = money,
+            VirtualCurrency = "CN"
+        }, result =>
+        {
+            if (isRank)
+            {
+                int prevRating = 0;
+                PlayFabClientAPI.GetUserData(new GetUserDataRequest()
+                {
+                    PlayFabId = accountManager.currentUserId,
+                    Keys = null
+                }, result =>
+                {
+                    foreach (var kvp in result.Data)
+                    {
+                        if (kvp.Key == "rating")
+                        {
+                            prevRating = int.Parse(kvp.Value.Value);
+                            PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest
+                            {
+                                Data = new Dictionary<string, string>()
+                                {
+                                    {"rating", (rate + prevRating).ToString()}
+                                },
+                                Permission = UserDataPermission.Public
+                            }, result =>
+                            {
+                                ui.SetSequencePanel(endSequence, playerProperties);
+                                ui.SetSettlePanel(winner, time.ToString(), money, rate);
+                            }, error => {});
+                        }
+                    }
+                }, (error) => {});
+            }
+        }, error => {});
     }
 
     void Update()
