@@ -7,7 +7,6 @@ using Photon.Pun;
 public class PlayerManager : MonoBehaviourPunCallbacks
 {
     private AirplaneController airplaneController;
-    private GameManager gameManager;
     public string playerId;
 
     public float maxFuel;
@@ -15,29 +14,26 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     public float acceleration;
 
     public ParticleSystem[] particles;
-    
-    
+
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
         airplaneController = GetComponent<AirplaneController>();
         particles = GetComponentsInChildren<ParticleSystem>();
 
         fuel = maxFuel;
+
+        InitParticles();
+        StartCamera();
     }
 
     public void InitParticles()
     {
-        foreach(ParticleSystem particle in particles)
+        foreach (ParticleSystem particle in particles)
             particle.Play();
     }
 
     void Update()
     {
-        if (!photonView.IsMine || !gameManager.isStarted) return;
-        
-        
-        
         if (Input.GetKey(KeyCode.LeftShift))
         {
             Accelerate();
@@ -59,8 +55,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         if (fuel <= 0 || airplaneController.speed >= airplaneController.maxSpeed)
             return;
 
-        fuel -= acceleration * 0.5f * Time.deltaTime;
-        airplaneController.speed += acceleration * 5f * Time.deltaTime;
+        fuel -= acceleration * 5f * Time.deltaTime;
+        airplaneController.speed += acceleration * 10f * Time.deltaTime;
         SetParticles(true);
     }
 
@@ -78,7 +74,8 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         if (airplaneController.speed <= airplaneController.minSpeed)
             return;
 
-        airplaneController.speed -= 200f * Time.deltaTime;
+        if (fuel <= maxFuel) fuel += acceleration * 5f * Time.deltaTime;
+        airplaneController.speed -= 500f * Time.deltaTime;
         SetParticles(false);
     }
 }

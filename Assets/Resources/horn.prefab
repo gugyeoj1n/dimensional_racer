@@ -9787,7 +9787,13 @@ MonoBehaviour:
   speed: 5000
   minSpeed: 5000
   maxSpeed: 7000
+  boosterAmount: 0
   lerpAmount: 1
+  currentTime: 0
+  previousTime: 0
+  previousPosition: {x: 0, y: 0, z: 0}
+  previousRotation: {x: 0, y: 0, z: 0, w: 0}
+  playerManager: {fileID: 0}
 --- !u!114 &-237973732757892376
 MonoBehaviour:
   m_ObjectHideFlags: 0

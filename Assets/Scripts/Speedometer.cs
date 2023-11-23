@@ -14,21 +14,21 @@ public class Speedometer : MonoBehaviour
 
     public float minSpeed;
 
-    public TestAirplaneController testAirplaneController;
-    public TestPlayerManager testPlayerManager;
+    public AirplaneController airplaneController;
+    public PlayerManager playerManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        testAirplaneController = FindAnyObjectByType<TestAirplaneController>();
-        testPlayerManager = FindAnyObjectByType<TestPlayerManager>();
+        airplaneController = FindAnyObjectByType<AirplaneController>();
+        playerManager = FindAnyObjectByType<PlayerManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentSpeed = testAirplaneController.speed - 8000;
-        maxSpeed = testAirplaneController.maxSpeed - 8000;
+        currentSpeed = airplaneController.speed - 8000;
+        maxSpeed = airplaneController.maxSpeed - 8000;
     }
 
     void OnGUI()

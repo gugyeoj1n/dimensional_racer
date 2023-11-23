@@ -21,6 +21,9 @@ public class Item : MonoBehaviour
     {
         Debug.Log(other.name);
         Destroy(gameObject);
-        if (other.gameObject.GetComponent<TestAirplaneController>().boosterAmount < 2) other.gameObject.GetComponent<TestAirplaneController>().boosterAmount++;
+        if (other.gameObject.GetComponent<AirplaneController>().boosterAmount < 2)
+        {
+            other.gameObject.GetComponent<AirplaneController>().boosterAmount++;
+        }
     }
 }
