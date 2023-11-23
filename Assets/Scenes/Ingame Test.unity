@@ -1949,10 +1949,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 1341131504258169651, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
     - {fileID: 6713553171347144480, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7664518307048506584, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2126097416}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7648007300635085030, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
       insertIndex: -1
@@ -2765,8 +2762,9 @@ GameObject:
   - component: {fileID: 2126097419}
   - component: {fileID: 2126097418}
   - component: {fileID: 2126097417}
+  - component: {fileID: 2126097420}
   m_Layer: 6
-  m_Name: Cylinder
+  m_Name: Mini Map Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2780,12 +2778,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2126097415}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 500, z: 0}
-  m_LocalScale: {x: 100, y: 0, z: 100}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 12, z: 0}
+  m_LocalScale: {x: 10, y: 0, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1501481144}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &2126097417
 CapsuleCollider:
@@ -2804,7 +2802,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5000001
   m_Height: 2
@@ -2860,6 +2858,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2126097415}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2126097420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126097415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd19b9a32962ea47b6e4c56bcbc6869, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1501481144}
 --- !u!1001 &7040558581452792415
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2925,6 +2936,7 @@ SceneRoots:
   - {fileID: 1272595351}
   - {fileID: 2029231753}
   - {fileID: 628366267}
+  - {fileID: 2126097416}
   - {fileID: 1501481135}
   - {fileID: 385349429}
   - {fileID: 1981440941}
