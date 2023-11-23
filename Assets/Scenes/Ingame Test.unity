@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1297,8 +1297,8 @@ MonoBehaviour:
   currentSpeed: 50
   maxSpeed: 200
   minSpeed: 0
-  testAirplaneController: {fileID: 0}
-  testPlayerManager: {fileID: 0}
+  airplaneController: {fileID: 0}
+  playerManager: {fileID: 0}
 --- !u!1 &1139117721
 GameObject:
   m_ObjectHideFlags: 0
@@ -1328,7 +1328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 284291a45c29ccc4994c1adce3815fdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSpeedText: {fileID: 0}
+  currentSpeedText: {fileID: 1123637875}
   currentStageText: {fileID: 0}
   maxStageText: {fileID: 0}
   fuelImage: {fileID: 0}
@@ -1344,6 +1344,11 @@ MonoBehaviour:
   ItemIcon1: {fileID: 1026202394}
   ItemIcon2: {fileID: 238865490}
   Fuel: {fileID: 1807611372}
+  settlePanel: {fileID: 0}
+  winnerNameText: {fileID: 0}
+  winnerTimeText: {fileID: 0}
+  coinAddText: {fileID: 0}
+  ratingText: {fileID: 0}
   isShifting: 0
   currentFillAmount: 0
 --- !u!4 &1139117723
@@ -1418,7 +1423,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Time / 0 : 00 : 00'
+  m_text: 'Time / 0 : 00 : 000'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c1427a76d2afa4bdf9d699ef0a646219, type: 2}
   m_sharedMaterial: {fileID: 2959425826267408056, guid: c1427a76d2afa4bdf9d699ef0a646219, type: 2}
@@ -1933,17 +1938,22 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7648007300635085030, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1501481138}
+      addedObject: {fileID: 1501481151}
     - targetCorrespondingSourceObject: {fileID: 7648007300635085030, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1501481137}
+      addedObject: {fileID: 1501481150}
   m_SourcePrefab: {fileID: 100100000, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
 --- !u!1 &1501481136 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7648007300635085030, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
   m_PrefabInstance: {fileID: 1501481135}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1501481137
+--- !u!4 &1501481144 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7664518307048506584, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
+  m_PrefabInstance: {fileID: 1501481135}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1501481150
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1952,7 +1962,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1501481136}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0fa91cc2c2ca41d2961441d4d2ae52c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ad77651b940b4e6580935a872332d1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerId: 
@@ -1960,7 +1970,7 @@ MonoBehaviour:
   fuel: 1000
   acceleration: 100
   particles: []
---- !u!114 &1501481138
+--- !u!114 &1501481151
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1969,7 +1979,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1501481136}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0586250d9471f44afbd0fd96f34b6ae4, type: 3}
+  m_Script: {fileID: 11500000, guid: 570ce6974aedcb84399dc64c9e2735c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rollAmount: 300
@@ -1984,12 +1994,56 @@ MonoBehaviour:
   previousTime: 0
   previousPosition: {x: 0, y: 0, z: 0}
   previousRotation: {x: 0, y: 0, z: 0, w: 0}
-  testPlayerManager: {fileID: 0}
---- !u!4 &1501481144 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7664518307048506584, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
-  m_PrefabInstance: {fileID: 1501481135}
+  playerManager: {fileID: 0}
+--- !u!1 &1533950024
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1533950026}
+  - component: {fileID: 1533950025}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1533950025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533950024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c447f29a61ce47f29579d2e45c642c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isReady: 0
+  isStarted: 0
+  firstClear: 0
+  time: 0
+  playerPrefab: {fileID: 0}
+--- !u!4 &1533950026
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1533950024}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 56.499996, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1586715707
 GameObject:
   m_ObjectHideFlags: 0
@@ -2705,7 +2759,7 @@ Transform:
   m_GameObject: {fileID: 2126097415}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalPosition: {x: 0, y: 500, z: 0}
   m_LocalScale: {x: 100, y: 0, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2854,3 +2908,4 @@ SceneRoots:
   - {fileID: 7040558581452792415}
   - {fileID: 1455465395}
   - {fileID: 1139117723}
+  - {fileID: 1533950026}
