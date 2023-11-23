@@ -961,6 +961,7 @@ GameObject:
   m_Component:
   - component: {fileID: 628366267}
   - component: {fileID: 628366266}
+  - component: {fileID: 628366268}
   m_Layer: 0
   m_Name: Mini Map Camera
   m_TagString: Untagged
@@ -1028,12 +1029,25 @@ Transform:
   m_GameObject: {fileID: 628366264}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 900, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalPosition: {x: 0, y: 100, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1501481144}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &628366268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 628366264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f02e064f547e27a4ab668dbf2a02258b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1501481144}
 --- !u!1 &1026202394
 GameObject:
   m_ObjectHideFlags: 0
@@ -1871,6 +1885,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -2425712884857531489, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4111382806436778432, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
       propertyPath: smoothSpeed
       value: 10
@@ -1932,9 +1950,6 @@ PrefabInstance:
     - {fileID: 1341131504258169651, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
     - {fileID: 6713553171347144480, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7664518307048506584, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 628366267}
     - targetCorrespondingSourceObject: {fileID: 7664518307048506584, guid: 998f7932fe90e424485b0b9dca48baae, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2126097416}
@@ -2909,6 +2924,7 @@ SceneRoots:
   - {fileID: 1586715710}
   - {fileID: 1272595351}
   - {fileID: 2029231753}
+  - {fileID: 628366267}
   - {fileID: 1501481135}
   - {fileID: 385349429}
   - {fileID: 1981440941}
