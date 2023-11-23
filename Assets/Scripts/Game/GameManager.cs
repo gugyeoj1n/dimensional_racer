@@ -86,12 +86,6 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
             
             player.GetComponent<PhotonView>().TransferOwnership(pl.Value);
             
-            /*playerProperties.Add(new PlayerProperty
-            {
-                name = pl.Value.NickName,
-                client = (string)pl.Value.CustomProperties["cartId"]
-            }, player);*/
-
             names[cnt] = pl.Value.NickName;
             clients[cnt] = (string)pl.Value.CustomProperties["cartId"];
             photonViews[cnt] = player.GetComponent<PhotonView>().ViewID;
@@ -127,6 +121,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
                 ui.playerManager = player.gameObject.GetComponent<PlayerManager>();
             }
         }
+        
+        FindObjectOfType<MiniMapCamera>().SetCam();
+
         StartCoroutine(CountStart());
     }
 
@@ -206,7 +203,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
             rate = -100;
         }
         
-        PlayFabClientAPI.AddUserVirtualCurrency(new AddUserVirtualCurrencyRequest()
+        ui.SetSequencePanel(endSequence, playerProperties);
+        ui.SetSettlePanel(winner, time.ToString(), money, rate);
+        
+        /*PlayFabClientAPI.AddUserVirtualCurrency(new AddUserVirtualCurrencyRequest()
         {
             Amount = money,
             VirtualCurrency = "CN"
@@ -242,7 +242,12 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
                     }
                 }, (error) => {});
             }
-        }, error => {});
+            else
+            {
+                ui.SetSequencePanel(endSequence, playerProperties);
+                ui.SetSettlePanel(winner, time.ToString(), money, rate);
+            }
+        }, error => {});*/
     }
 
     void Update()

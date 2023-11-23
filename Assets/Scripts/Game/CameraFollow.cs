@@ -20,11 +20,6 @@ public class CameraFollow : MonoBehaviour
 
     public float smoothSpeed = 0.125f;
 
-    void Start()
-    {
-        StartFollowing();
-    }
-
     private void FixedUpdate()
     {
         if (camTransform == null && isFollowing)
