@@ -1,42 +1,44 @@
-<div align="center">
-  <h3>DIMENSIONAL RACER</h3>
-  <h4>멀티플레이 레이싱 게임</h4>
-  <h5>2023학년도 2학기 게임소프트웨어 팀3</h5>
-  <br>
-  <table>
-      <thead>
-          <tr>
-              <th colspan="4"> Members </th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-            <tr>
-              <td align='center'>곽우진</td>
-              <td align='center'>김지환</td>
-              <td align='center'>윤재호</td>
-              <td align='center'>류시현</td>
-            </tr>
-            <tr>
-              <td align='center'>소프트웨어학부</td>
-              <td align='center'>소프트웨어학부</td>
-              <td align='center'>음악학부</td>
-              <td align='center'>소프트웨어학부</td>
-            </tr>
-            <tr>
-              <td align='center'>서버 & UI</td>
-              <td align='center'>서버 & UI</td>
-              <td align='center'>클라이언트</td>
-              <td align='center'>클라이언트</td>
-            </tr>
-          </tr>
-      </tbody>
-  </table>
-  <br>
-  <div>
-    기술 스택
-    <br><br>
-    <img src="https://img.shields.io/badge/Unity-000000?style=flat-square&logo=Unity&logoColor=Gray"/>
-    <img src="https://img.shields.io/badge/C%23-239120A?style=flat-square&logo=Csharp&logoColor=white"/>
-  </div>
-</div>
+# DIMENSIONAL RACER
+
+#### 2023학년도 2학기 게임소프트웨어 팀3
+***
+### 프로젝트 팀원
+
+| 이름     | 학과           | 역할         |
+| -------- | -------------- | ------------ |
+| 곽우진    | 소프트웨어학부 |       서버      |
+| 김지환    | 소프트웨어학부 |       UI       |
+| 윤재호    | 음악학부       |   클라이언트   |
+***
+
+### 개발 주제
+
+우주선을 타고 다양한 차원을 포탈로 넘나들며 결승선까지 도달하는 3D 멀티플레이 레이싱 게임
+***
+
+### 기술 스택
+
+Unity 2022.3.9f1 + Photon Engine & PlayFab
+***
+
+### 개발 기간
+
+2023.9.14 ~ 2023.12.8
+***
+
+### 설치 및 실행 방법
+
+여기는 제가 구글 클라우드에 업로드할게요
+***
+
+### 씬 단위 프로젝트 구조 설명
+> ### 1. Base 씬
+
+
+> ### 2. Sign In 씬
+
+
+> ### 3. Lobby 씬
+
+
+> ### 4. Ingame 씬
