@@ -26,6 +26,16 @@ Unity 2022.3.9f1 + Photon Engine & PlayFab
 2023.9.14 ~ 2023.12.8
 ***
 
+### 사용 에셋
+
+> 클라이언트
+- Low-Poly Spaceships Set (무료) : 
+- Modern UI Pack (유료) :
+
+> 서버
+- Photon Unity Networking Free (무료) : Photon 을 활용한 실시간 동기화를 구현하기 위하여 사용했습니다.
+- PlayFab SDK (무료) : PlayFab 을 이용한 사용자 계정, 서버, 매치메이킹 관리를 구현하기 위하여 사용했습니다.
+
 ### 설치 및 실행 방법
 
 여기는 제가 구글 클라우드에 업로드할게요
