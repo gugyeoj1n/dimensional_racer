@@ -44,6 +44,8 @@ Unity 2022.3.9f1 + Photon Engine & PlayFab
 ### 씬 단위 프로젝트 구조 설명
 > ### 1. Base 씬
 
+    오브젝트가 파괴되지 않도록 설정하는 OnDestroyOnLoad 기능을 사용하기 위해 제작된 씬입니다.
+    모든 씬에 필요한 계정 관리용 AccountManager, 설정값을 갖는 SettingManager 오브젝트에 OnDestroyOnLoad를 부여하고 바로 Sign In 씬으로 이동합니다.
 
 > ### 2. Sign In 씬
 
