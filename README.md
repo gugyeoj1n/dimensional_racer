@@ -29,8 +29,22 @@ Unity 2022.3.9f1 + Photon Engine & PlayFab
 ### 사용 에셋
 
 > 클라이언트
-- Low-Poly Spaceships Set (무료) : 
 - Modern UI Pack (유료) :
+- Low Poly Ultimate Pack (유료) : 전체 맵 디자인
+- Low-Poly Spaceships Set (무료) : 플레이어 기체
+- Lowpoly Textures Pack (무료) : 맵 텍스쳐
+- LowPoly Trees and Rocks (무료) : 숲 맵 디자인
+- Handpainted Grass & Ground Textures (무료) : 숲 맵 텍스쳐
+- Stylized Low Poly Animated Horse Pack : 숲 맵 장애물
+- POLYDesert (무료) : 사막 맵 디자인
+- Desert Kits 64 Sample (무료) : 사막 맵 디자인
+- Free Low Poly Desert Pack (무료) : 사막 맵 디자인
+- Ez Tornado (무료) : 사막 맵 장애물
+- Lowpoly Modern City Buildings Set (무료) : 도시 맵 디자인
+- Free Low Poly Simple Urban City 3D Asset Pack (무료) : 도시 맵 디자인
+- Low Poly Road Pack (무료) : 도시 맵 도로
+- Sky City Lite (무료) : 미래 맵 디자인
+- Stylized Sci-fi Texture (무료) : 미래 맵 텍스쳐
 
 > 서버
 - Photon Unity Networking Free (무료) : Photon 을 활용한 실시간 동기화를 구현하기 위하여 사용했습니다.
