@@ -18,7 +18,12 @@
 
 ### 기술 스택
 
-Unity 2022.3.9f1 + Photon Engine & PlayFab
+> ### 개발
+    Unity 2022.3.9f1 + Photon Engine & PlayFab
+
+> ### 협업
+    Git, Slack
+
 ***
 
 ### 개발 기간
