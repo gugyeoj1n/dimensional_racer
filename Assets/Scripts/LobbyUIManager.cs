@@ -60,8 +60,6 @@ public class LobbyUIManager : MonoBehaviour
 
     public GameObject settingPanel;
     public Slider masterVolume;
-    public Slider backgroundVolume;
-    public Slider effectVolume;
     public TMP_Dropdown windowed;
 
     public GameObject errorPanel;
@@ -360,7 +358,7 @@ public class LobbyUIManager : MonoBehaviour
     public void ApplySettings()
     {
         bool window = windowed.options[windowed.value].text == "창 모드";
-        settingManager.SaveSettings(masterVolume.value, backgroundVolume.value, effectVolume.value, window);
+        settingManager.SaveSettings(masterVolume.value / 100f, window);
         settingPanel.SetActive(false);
     }
 

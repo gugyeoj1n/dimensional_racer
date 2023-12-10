@@ -46,6 +46,8 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
     
     public bool isShifting = false;
     public float currentFillAmount;
+
+    public GameObject loadingPanel;
     
     void Start()
     {
@@ -55,6 +57,11 @@ public class IngameUIManager : MonoBehaviourPunCallbacks
         item1 = ItemIcon1.GetComponent<Image>();
         item2 = ItemIcon2.GetComponent<Image>();
         fuelImage = Fuel.GetComponent<Image>();
+    }
+
+    public void SetLoadingPanel(bool target)
+    {
+        loadingPanel.SetActive(target);
     }
 
     public void InitPlayers(Dictionary<PlayerProperty, int>.KeyCollection target)

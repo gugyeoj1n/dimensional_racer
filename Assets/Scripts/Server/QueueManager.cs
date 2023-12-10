@@ -39,10 +39,14 @@ public class QueueManager : MonoBehaviourPunCallbacks
     private IEnumerator enterRoomCoroutine;
     private bool isJoined = false;
 
+    public AudioClip[] audios;
+    private AudioSource audio;
+
     void Start()
     {
         accountManager = FindObjectOfType<AccountManager>();
         lobbyUIManager = FindObjectOfType<LobbyUIManager>();
+        audio = GetComponent<AudioSource>();
         SetTicketInfo("normal");
         SetCart("horn");
     }
@@ -191,6 +195,8 @@ public class QueueManager : MonoBehaviourPunCallbacks
     private void OnGetMatch(GetMatchResult result)
     {
         Debug.Log("매치메이킹에 성공했습니다.");
+        audio.clip = audios[0];
+        audio.Play();
         
         if (result.Members[1].Entity.Id == accountManager.entityId)
         {
@@ -269,7 +275,7 @@ public class QueueManager : MonoBehaviourPunCallbacks
         
         Debug.Log("입장 완료");
         
-        PhotonNetwork.LoadLevel("SyncTest");
+        PhotonNetwork.LoadLevel("Ingame");
         //SceneManager.LoadScene(1);
     }
 }

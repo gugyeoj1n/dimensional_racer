@@ -15,7 +15,7 @@ public class Horsespawn : MonoBehaviour
     {
         area = GetComponent<BoxCollider>();
 
-        // 처음에 10초 후에 첫번째 호출을 하고, 그 이후로는 10초 주기로 반복 호출
+       
         InvokeRepeating("SpawnHorses", 0f, 3f);
 
         area.enabled = false;

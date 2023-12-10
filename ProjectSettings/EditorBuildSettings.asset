@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Lobby.unity
     guid: eb9943837ff30bf418996c36360e4971
   - enabled: 1
-    path: Assets/Scenes/SyncTest.unity
-    guid: adfc76818ee534215a1f8f019d39af42
+    path: Assets/Scenes/Ingame.unity
+    guid: 28c70219e5a0849e08e7ce823383901c
   m_configObjects: {}

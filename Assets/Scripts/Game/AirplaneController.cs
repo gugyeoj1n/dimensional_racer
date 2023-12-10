@@ -32,6 +32,11 @@ public class AirplaneController : MonoBehaviourPunCallbacks
     public Vector3 previousPosition;
     public Quaternion previousRotation;
     public PlayerManager playerManager;
+    
+    public bool isOnWall;
+
+    public AudioClip[] audios;
+    private AudioSource audio;
 
     void MoveAircraft()
     {
@@ -49,6 +54,8 @@ public class AirplaneController : MonoBehaviourPunCallbacks
         previousPosition = transform.position;
         previousRotation = transform.rotation;
         minSpeed = speed;
+
+        audio = transform.GetChild(0).GetComponent<AudioSource>();
     }
 
     public void Back()
@@ -62,9 +69,18 @@ public class AirplaneController : MonoBehaviourPunCallbacks
 
         rb.WakeUp();
     }
+    
+    public void OnWall(){
+        speed = 2000f;
+    }
+    
+    public void LeftWall(){
+        speed = minSpeed;
+    }
 
     void Update()
     {
+        
         currentTime = Time.time;
         if (currentTime - previousTime >= 10f)
         {
@@ -81,6 +97,11 @@ public class AirplaneController : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             Boost();
+            audio.clip = audios[0];
+            audio.Play();
+        } else if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            audio.Stop();
         }
     }
 

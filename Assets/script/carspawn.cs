@@ -4,45 +4,60 @@ using UnityEngine;
 
 public class carspawn : MonoBehaviour
 {
-    public GameObject rangeObject;
-    BoxCollider rangeCollider;
+    public GameObject[] prefabs;
+    private BoxCollider area;
+    public int minCount = 1; // ìµœì†Œ ìƒì„± ê°¯ìˆ˜
+    public int maxCount = 3; // ìµœëŒ€ ìƒì„± ê°¯ìˆ˜
 
-    private void Awake()
+    private List<GameObject> spawnedObjects = new List<GameObject>();
+
+    void Start()
     {
-        rangeCollider = rangeObject.GetComponent<BoxCollider>();
+        area = GetComponent<BoxCollider>();
+
+       
+        InvokeRepeating("SpawnHorses", 0f, 1f);
+
+        area.enabled = false;
     }
 
-    Vector3 Return_RandomPosition()
+    void SpawnHorses()
     {
-        Vector3 originPosition = rangeObject.transform.position;
-        // Äİ¶óÀÌ´õÀÇ »çÀÌÁî¸¦ °¡Á®¿À´Â bound.size »ç¿ë
-        float range_X = rangeCollider.bounds.size.x;
-        float range_Z = rangeCollider.bounds.size.z;
+        int randomCount = Random.Range(minCount, maxCount + 1); // ìµœì†Œì—ì„œ ìµœëŒ€ê¹Œì§€ì˜ ëœë¤í•œ ê°¯ìˆ˜
 
-        range_X = Random.Range((range_X / 2) * -1, range_X / 2);
-        range_Z = Random.Range((range_Z / 2) * -1, range_Z / 2);
-        Vector3 RandomPostion = new Vector3(range_X, 0f, range_Z);
-
-        Vector3 respawnPosition = originPosition + RandomPostion;
-        return respawnPosition;
-    }
-          // ¼ÒÈ¯ÇÒ Object
-    public GameObject car;
-        public Vector3 moveDirection = Vector3.forward; // ¿òÁ÷ÀÏ ¹æÇâ (±âº»ÀûÀ¸·Î ¾ÕÀ¸·Î)
-    private void Start()
-    {
-        StartCoroutine(RandomRespawn_Coroutine());
-    }
-
-    IEnumerator RandomRespawn_Coroutine()
-    {
-        while (true)
+        for (int i = 0; i < randomCount; ++i)
         {
-            yield return new WaitForSeconds(1f);
-
-            // »ı¼º À§Ä¡ ºÎºĞ¿¡ À§¿¡¼­ ¸¸µç ÇÔ¼ö Return_RandomPosition() ÇÔ¼ö ´ëÀÔ
-            GameObject instantCar = Instantiate(car, Return_RandomPosition(), Quaternion.Euler(new Vector3(0, -90, 0)));
+            Spawn();
         }
     }
-    
+
+    private Vector3 GetRandomPosition()
+    {
+        Vector3 basePosition = transform.position;
+        Vector3 size = area.size;
+
+        float posX = basePosition.x + Random.Range(-size.x / 2f, size.x / 2f);
+        float posY = basePosition.y + Random.Range(-size.y / 2f, size.y / 2f);
+        float posZ = basePosition.z + Random.Range(-size.z / 2f, size.z / 2f);
+
+        Vector3 spawnPos = new Vector3(posX, posY, posZ);
+
+        return spawnPos;
+    }
+
+    private void Spawn()
+    {
+        int selection = Random.Range(0, prefabs.Length);
+
+        GameObject selectedPrefab = prefabs[selection];
+
+        Vector3 spawnPos = GetRandomPosition();
+
+        // ìˆ˜ì •ëœ ë¶€ë¶„: ë¶€ëª¨ì˜ íšŒì „ê°’ì„ ê°€ì ¸ì™€ì„œ ìì‹ì˜ íšŒì „ê°’ì— ì ìš©
+        Quaternion spawnRotation = Quaternion.Euler(new Vector3(0, 0, 0));
+        spawnRotation *= transform.rotation;
+
+        GameObject instance = Instantiate(selectedPrefab, spawnPos, spawnRotation);
+        spawnedObjects.Add(instance);
+    }
 }

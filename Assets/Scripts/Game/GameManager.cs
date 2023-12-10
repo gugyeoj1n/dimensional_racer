@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
     public Dictionary<PlayerProperty, int> playerProperties;
     public List<int> endSequence;
 
+    public AudioClip[] audios;
+    private AudioSource audio;
+
     public int myId;
     
     public GameObject playerPrefab;
@@ -42,6 +45,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
         endSequence = new List<int>();
         ui = FindObjectOfType<IngameUIManager>();
         accountManager = FindObjectOfType<AccountManager>();
+        audio = GetComponent<AudioSource>();
         
         Debug.Log("현재 룸 인원수 : " + PhotonNetwork.CurrentRoom.PlayerCount);
         StartCoroutine(CheckRoomFull());
@@ -66,6 +70,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
 
             yield return new WaitForSecondsRealtime(0.1f);
         }
+        
+        ui.SetLoadingPanel(false);
     }
 
     private void SpawnPlayers()
@@ -129,8 +135,10 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
 
     IEnumerator CountStart()
     {
+        audio.clip = audios[0];
         ui.countText.gameObject.SetActive(true);
         ui.countText.text = "3";
+        audio.Play();
         yield return new WaitForSeconds(1f);
         ui.countText.text = "2";
         yield return new WaitForSeconds(1f);
@@ -140,6 +148,8 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
         isStarted = true;
         UnlockInput(true);
         yield return new WaitForSeconds(1f);
+        audio.clip = audios[1];
+        audio.Play();
         ui.countText.gameObject.SetActive(false);
     }
 

@@ -13,21 +13,27 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     public float fuel;
     public float acceleration;
 
+    public AudioClip[] audios;
+    private AudioSource audio;
+
     public ParticleSystem[] particles;
 
     void Start()
     {
         airplaneController = GetComponent<AirplaneController>();
         particles = GetComponentsInChildren<ParticleSystem>();
+        audio = GetComponent<AudioSource>();
 
         fuel = maxFuel;
-
     }
 
     public void InitParticles()
     {
         foreach (ParticleSystem particle in particles)
             particle.Play();
+
+        audio.clip = audios[0];
+        audio.Play();
     }
 
     void Update()
