@@ -34,7 +34,10 @@
 ### 사용 에셋
 
 > 클라이언트
-- Modern UI Pack (유료) :
+- https://noonnu.cc/font_page/1175 (무료 폰트) : 레이싱 컨셉의 게임이기 때문에 타이어 자국과 비슷한 디자인의 폰트를 사용함
+- Modern UI Pack (유료) : 설정, 메일, 게임 내 재화 아이콘들을 사용하였고 에셋 전용 컴포넌트인 UI Gradient로 버튼에 명암값을 주어 디자인함
+- Clean Vector Icon : 플레이어 아이콘에 사용됨
+- Dark UI : 친구, 차고, 상점, 파티 관련 아이콘이 위의 에셋에 포함되어있지 않아서 이를 위해 추가함
 - Low Poly Ultimate Pack (유료) : 전체 맵 디자인
 - Low-Poly Spaceships Set (무료) : 플레이어 기체
 - Lowpoly Textures Pack (무료) : 맵 텍스쳐
