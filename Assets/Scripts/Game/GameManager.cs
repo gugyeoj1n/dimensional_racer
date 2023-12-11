@@ -149,6 +149,7 @@ public class GameManager : MonoBehaviourPunCallbacks, IOnEventCallback {
         UnlockInput(true);
         yield return new WaitForSeconds(1f);
         audio.clip = audios[1];
+        audio.loop = true;
         audio.Play();
         ui.countText.gameObject.SetActive(false);
     }
