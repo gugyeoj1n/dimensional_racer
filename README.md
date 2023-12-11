@@ -61,13 +61,8 @@
 ***
 
 ### 설치 및 실행 방법
-> ### Unity Editor
 
-    1. Unity Hub와 Unity Editor 2022.3.9f1 버전을 설치합니다.
-    2. 본 프로젝트를 Clone 또는 다운로드 후, Unity Hub에서 오픈합니다.
-    3. Assets/Scenes 경로의 Base 씬을 로드 후 실행합니다.
-
-> ### Build
+[다운로드 링크](https://drive.google.com/file/d/1xOADNrN5XQmeX3eD5EORVIXrxaNQDZ9I/view?usp=sharing)
 
     1. 상단의 다운로드 링크에서 빌드 압축 파일을 다운로드 후, 압축을 해제합니다.
     2. Dimensional Racer.exe 파일을 실행합니다. 이 때 다른 파일들이 같은 경로에 존재해야 합니다.
