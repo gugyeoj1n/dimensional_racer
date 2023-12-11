@@ -62,7 +62,7 @@
 
 ### 설치 및 실행 방법
 
-[다운로드 링크](https://drive.google.com/file/d/1xOADNrN5XQmeX3eD5EORVIXrxaNQDZ9I/view?usp=sharing)
+[다운로드 링크](https://drive.google.com/file/d/1PWgqDlUhoKhmP8aRBAmD2Kj5UkQmvep5/view?usp=sharing)
 
     1. 상단의 다운로드 링크에서 빌드 압축 파일을 다운로드 후, 압축을 해제합니다.
     2. Dimensional Racer.exe 파일을 실행합니다. 이 때 다른 파일들이 같은 경로에 존재해야 합니다.
